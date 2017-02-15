@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="slidingmenuColor">#a00fa0ed</color>
+    <color name="textColorWhite">#fbfbfb</color>
+    <color name="white">#fffff3</color>
+    <color name="backgroundBoldColor">#800fa0ed</color>
+    <color name="background_title">#f20fa0ed</color>
+    <color name="backgroundSwitchSelected">#14b92c</color>
+    <color name="backgroundSwitchNormal">#D3D3D3</color>
+    <color name="bottomColor">#800fa0ed</color>
+    <color name="pstscolor">#800fffff</color>
+    <color name="theme">#800fa0ed</color>
+    <color name="textColorBlue">#68bee6</color>
+    <color name="clipColorLine">#cccc</color>
+    <color name="textBaclgroundListLocal">#2bde87</color>
+    <color name="textBackgroundListYinZhi">#09aaef</color>
+</resources>
