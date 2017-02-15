@@ -20,7 +20,6 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         x.view().inject(this);
-
         fragmentManager=getSupportFragmentManager();
         ft = fragmentManager.beginTransaction();
         ft.replace(R.id.fragment_layout_main,new MineFragment());

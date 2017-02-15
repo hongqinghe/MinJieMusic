@@ -11,5 +11,4 @@ public class BaseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_base);
 
     }
-
 }

@@ -1,6 +1,7 @@
 package com.hongqing.minjiemusic.fragment;
 
 import android.support.v4.app.Fragment;
+
 import android.widget.Toast;
 
 /**
@@ -8,7 +9,6 @@ import android.widget.Toast;
  */
 
 public class BaseFragment extends Fragment{
-
     public void toast(String msg){
         Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
     }

@@ -3,39 +3,46 @@
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:background="@color/background_title"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:gravity="center">
 
-    <ImageView
-        android:id="@+id/title_back"
+    <ImageButton
+        android:id="@+id/title_kuGou"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:src="@mipmap/back_title_icon" />
+        android:background="@drawable/kugou_item_title" />
 
     <TextView
-        android:id="@+id/title_text"
+        android:id="@+id/tv_title_listen"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:gravity="center_vertical"
-        android:text="本地音乐"
+        android:gravity="center"
+        android:text="@string/listen"
+        android:textColor="@color/textColorWhite" />
+  <TextView
+        android:id="@+id/tv_title_look"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+      android:gravity="center"
+        android:text="@string/look"
+        android:textColor="@color/textColorWhite" />
+  <TextView
+        android:id="@+id/tv_title_sing"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+      android:gravity="center"
+        android:text="@string/sing"
         android:textColor="@color/textColorWhite" />
 
-    <ImageView
+    <ImageButton
         android:id="@+id/title_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:src="@mipmap/search_title_icon" />
-
-    <ImageView
-        android:id="@+id/title_menu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:src="@mipmap/menu_title_icon" />
+       android:layout_margin="8dp"
+        android:background="@drawable/search_item_icon" />
 </LinearLayout>

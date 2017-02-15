@@ -17,4 +17,9 @@
     <color name="clipColorLine">#cccc</color>
     <color name="textBaclgroundListLocal">#2bde87</color>
     <color name="textBackgroundListYinZhi">#09aaef</color>
+    <color name="listenColor">#4586a9</color>
+    <color name="listen2Color">#6dbbe5</color>
+    <color name="text_gray">#e6e6e6</color>
+    <color name="backgroundColor_line">#e0e6e0</color>
+
 </resources>
