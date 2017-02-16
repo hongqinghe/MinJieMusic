@@ -109,13 +109,6 @@ public class ListenFragment extends BaseFragment implements View.OnClickListener
     private ValueAnimator createDropAnimator(final View v, int start, int end) {
         ValueAnimator animator = ValueAnimator.ofInt(start, end);//这是一个可变参数 也可设置为ofFloat类型
         //监听动画的动作变换
-//        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-//            @Override
-//            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-////                 valueAnimator.getAnimatedValue();
-//                v.setTranslationY((int) valueAnimator.getAnimatedValue());
-//            }
-//        });
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
             @Override
