@@ -6,8 +6,20 @@ package com.hongqing.minjiemusic.vo;
 
 public class MessageEvent {
     public MessageEventType type;
+    public Object data;
+    public int position;
     public MessageEvent(MessageEventType type) {
         this.type = type;
     }
 
+    public MessageEvent(MessageEventType type, Object data) {
+        this.type = type;
+        this.data = data;
+    }
+
+    public MessageEvent(MessageEventType type, Object data, int position) {
+        this.type = type;
+        this.data = data;
+        this.position = position;
+    }
 }

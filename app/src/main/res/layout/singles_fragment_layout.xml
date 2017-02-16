@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_marginLeft="8dp"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/localsongs_paly_in_order"/>
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:drawableRight="@mipmap/localsongs_next"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+           android:textColor="@color/textColor_black"
+            android:text="@string/play_in_order" />
+     <TextView
+         android:layout_width="0dp"
+         android:layout_height="match_parent"
+         android:layout_weight="1"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:src="@mipmap/localsongs_search"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:src="@mipmap/sort_by_local_songs"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:src="@mipmap/localsongs_edit"/>
+    </LinearLayout>
+   <ListView
+       android:layout_width="match_parent"
+       android:layout_height="0dp"
+       android:id="@+id/listView_localSongs_singles"
+       android:layout_weight="1">
+   </ListView>
+</LinearLayout>

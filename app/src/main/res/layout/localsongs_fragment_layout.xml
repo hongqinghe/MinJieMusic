@@ -4,13 +4,57 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-<android.support.v7.widget.Toolbar
-    android:id="@+id/toolBar"
-    android:title="@string/localSongs"
-    android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/background_title"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_gravity="center"
+            android:src="@mipmap/localsongs_back"/>
 
-    android:layout_height="wrap_content"
-    android:popupTheme="@style/Theme.ToolBar.Base"
-    android:background="@color/background_title">
-</android.support.v7.widget.Toolbar>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="5"
+            android:text="@string/localSongs"
+            android:gravity="center"
+            android:textSize="19dp"
+            android:textColor="@color/textColorWhite"
+            android:layout_height="match_parent" />
+        <ImageView
+            android:id="@+id/iv_more_localSongs"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/more_localsongs"
+            android:layout_margin="8dp"
+            android:layout_gravity="center"/>
+        <ImageView
+
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/menu_localsongs"
+            android:layout_margin="8dp"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+  <com.hongqing.minjiemusic.utils.PagerSlidingTabStrip
+      android:id="@+id/psts_pagerStrop"
+      android:layout_width="match_parent"
+      android:layout_height="60dp">
+
+  </com.hongqing.minjiemusic.utils.PagerSlidingTabStrip>
+<android.support.v4.view.ViewPager
+    android:id="@+id/viewPager_localSongs"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1">
+
+</android.support.v4.view.ViewPager>
 </LinearLayout>

@@ -45,7 +45,7 @@ public class BaseFragment extends Fragment{
     public void MessageSubscriber(MessageEvent event){
         Log.i("MessageSubscriber",event.type+"");
         if (event.type== MessageEventType.SHOW_LOCAL_SONGS){
-            ft.replace(R.id.fragment_layout_main,new LocalSongsFragment());
+            ft.replace(R.id.fragment_layout_main,LocalSongsFragment.getInstance());
             ft.commit();
         }
 

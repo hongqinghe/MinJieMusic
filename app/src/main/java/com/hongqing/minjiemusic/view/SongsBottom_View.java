@@ -65,7 +65,7 @@ public class SongsBottom_View extends LinearLayout implements View.OnClickListen
         list_bottom.setOnClickListener(this);
     }
 //提供设置图片资源
-    public void setSimpleDraweeView(Uri uri) {
+    public void setSimpleDrawerView(Uri uri) {
         simpleDraweeView.setImageURI(uri);
     }
     //设置歌名歌手的方法
@@ -84,7 +84,7 @@ public class SongsBottom_View extends LinearLayout implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.sdv_kugou_songsBottom:
-                bottomListener.setSimpleDraweeViewListener();
+                bottomListener.setSimpleDrawerViewListener();
                 break;
             case R.id.ib_play_bottom:
                 bottomListener.setPlayListener();
@@ -93,7 +93,7 @@ public class SongsBottom_View extends LinearLayout implements View.OnClickListen
                 bottomListener.setNextListener();
                 break;
             case R.id.ib_list_bottom:
-                bottomListener.setListListener();
+                bottomListener.setMenuListListener();
                 break;
         }
     }
@@ -103,12 +103,12 @@ public class SongsBottom_View extends LinearLayout implements View.OnClickListen
     }
 
     public interface BottomListener {
-        void setSimpleDraweeViewListener();
+        void setSimpleDrawerViewListener();
 
         void setPlayListener();
 
         void setNextListener();
 
-        void setListListener();
+        void setMenuListListener();
     }
 }

@@ -21,5 +21,6 @@
     <color name="listen2Color">#6dbbe5</color>
     <color name="text_gray">#e6e6e6</color>
     <color name="backgroundColor_line">#e0e6e0</color>
+    <color name="textColor_black">#2b2b2b</color>
 
 </resources>
