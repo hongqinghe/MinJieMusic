@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.hongqing.minjiemusic.R;
 import com.hongqing.minjiemusic.adapter.MyViewPagerAdapter;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
@@ -32,6 +33,21 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     private TabLayout tabLayout;
     private String[] titles = {"看", "听", "唱"};
     private int[] tabBackground = {Color.WHITE};
+    private PagerSlidingTabStrip psts_pagerTab;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        viewPager.setCurrentItem(0);
+        if (viewPager.getCurrentItem()==0){
+            psts_pagerTab.setTextColor(Color.RED);
+        }else if (viewPager.getCurrentItem()==1) {
+            psts_pagerTab.setTextColor(Color.WHITE);
+        }else  if (viewPager.getCurrentItem()==2) {
+            psts_pagerTab.setTextColor(Color.WHITE);
+        }
+        }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -44,21 +60,48 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     private void initView() {
         title_kuGou = (ImageView) view.findViewById(R.id.title_kuGou);
         viewPager = (ViewPager) view.findViewById(R.id.viewPager);
-        tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
+//        tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
+        psts_pagerTab= (PagerSlidingTabStrip) view.findViewById(R.id.psts_pagerTab);
+//        psts_pagerTab.setTextDirection();  方向
+         psts_pagerTab.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+             @Override
+             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+             }
+
+             @Override
+             public void onPageSelected(int position) {
+                   if (position==0){
+                       psts_pagerTab.setTextColor(Color.RED);
+                   }else  if (position==1){
+                       psts_pagerTab.setTextColor(Color.RED);
+                   }if (position==2){
+                     psts_pagerTab.setTextColor(Color.RED);
+                 }else{
+                       psts_pagerTab.setTextColor(Color.WHITE);
+                   }
+
+             }
+             @Override
+             public void onPageScrollStateChanged(int state) {
+
+//                 psts_pagerTab.setTextColor(Color.RED);
+             }
+         });
         initFragment();
         adapter = new MyViewPagerAdapter(
                 getActivity().getSupportFragmentManager(), fragmentList, titles);
         viewPager.setAdapter(adapter);
-        tabLayout.setupWithViewPager(viewPager);
+        psts_pagerTab.setViewPager(viewPager);
         initListener();
 
     }
 
     private void initFragment() {
         fragmentList = new ArrayList<>();
+        fragmentList.add(new ListenFragment());
         fragmentList.add(new SingFragment());
         fragmentList.add(new LookFragment());
-        fragmentList.add(new ListenFragment());
     }
 
     private void initListener() {
