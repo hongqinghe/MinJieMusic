@@ -1,7 +1,9 @@
 package com.hongqing.minjiemusic.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -26,8 +28,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     private ImageView title_kuGou;
     private ViewPager viewPager;
     private MyViewPagerAdapter adapter;
-    private List<Fragment> fragmentList ;
-
+    private List<Fragment> fragmentList;
+    private TabLayout tabLayout;
+    private String[] titles = {"看", "听", "唱"};
+    private int[] tabBackground = {Color.WHITE};
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -40,9 +44,12 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     private void initView() {
         title_kuGou = (ImageView) view.findViewById(R.id.title_kuGou);
         viewPager = (ViewPager) view.findViewById(R.id.viewPager);
+        tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
         initFragment();
-        adapter=new MyViewPagerAdapter(getActivity().getSupportFragmentManager(),fragmentList);
+        adapter = new MyViewPagerAdapter(
+                getActivity().getSupportFragmentManager(), fragmentList, titles);
         viewPager.setAdapter(adapter);
+        tabLayout.setupWithViewPager(viewPager);
         initListener();
 
     }
