@@ -20,4 +20,10 @@ public class SingFragment extends BaseFragment {
         return view;
 
     }
+    //单例设计模式
+    private SingFragment(){}
+    private static SingFragment  singFragment=new SingFragment();
+    public  static  SingFragment  getInstance(){
+        return singFragment;
+    }
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<group android:id="@+id/title_local_group" android:visible="true">
+    <item android:id="@+id/scanning_songs" android:title="@string/scanning_songs" android:icon="@mipmap/scanning_songs"/>
+    <item android:id="@+id/upgrade_source" android:title="@string/upgrade_source" android:icon="@mipmap/upgrade_source"/>
+    <item android:id="@+id/match_words" android:title="@string/match_words" android:icon="@mipmap/match_words"/>
+    <item android:id="@+id/sort_by" android:title="@string/sort_by" android:icon="@mipmap/sort_by_local_songs"/>
+</group>
+</menu>

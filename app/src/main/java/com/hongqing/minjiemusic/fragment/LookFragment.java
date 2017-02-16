@@ -20,4 +20,10 @@ public class LookFragment extends BaseFragment {
         return view;
 
     }
+    //单例设计模式
+    private LookFragment(){}
+    private static LookFragment lookFragment  =new LookFragment();
+    public  static  LookFragment  getInstance(){
+        return lookFragment;
+    }
 }

@@ -64,6 +64,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:id="@+id/line_localSongs"
         android:background="@color/listen2Color"
         android:orientation="horizontal">
 

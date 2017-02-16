@@ -17,4 +17,9 @@
     <string name="run">跑步</string>
     <string name="send_song">传歌</string>
     <string name="games">游戏</string>
+    <string name="localSongs">本地音乐</string>
+    <string name="scanning_songs">扫描歌曲</string>
+    <string name="upgrade_source">升级音质</string>
+    <string name="match_words">匹配词图</string>
+    <string name="sort_by">排序方式</string>
 </resources>

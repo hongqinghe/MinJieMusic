@@ -42,6 +42,14 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         super.onResume();
         viewPager.setCurrentItem(0);
         }
+    //单例设计模式
+    private MineFragment() {
+    }
+    private static MineFragment mineFragment = new MineFragment();
+
+    public static MineFragment getInstance() {
+        return mineFragment;
+    }
 
     @Nullable
     @Override
@@ -66,7 +74,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         setPagerStripListener(strip);//设置监听事件
         strip.setViewPager(viewPager);
         initListener();
-
     }
 
     private void setPagerStripListener(PagerSlidingTabStrip strip) {
@@ -117,11 +124,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 
     private void initFragment() {
         fragmentList = new ArrayList<>();
-        fragmentList.add(new ListenFragment());
-        fragmentList.add(new SingFragment());
-        fragmentList.add(new LookFragment());
+        fragmentList.add(ListenFragment.getInstance());
+        fragmentList.add(SingFragment.getInstance());
+        fragmentList.add(LookFragment.getInstance());
     }
-
     private void initListener() {
         title_kuGou.setOnClickListener(this);
     }
