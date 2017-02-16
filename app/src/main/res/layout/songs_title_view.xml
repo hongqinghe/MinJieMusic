@@ -14,61 +14,16 @@
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="8dp"
         android:background="@drawable/kugou_item_title" />
-<!--<android.support.design.widget.TabLayout-->
-    <!--android:id="@+id/tabLayout"-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_weight="1"-->
-    <!--android:layout_height="match_parent"-->
-    <!--app:tabTextColor="@color/textColorWhite"-->
-    <!--app:tabSelectedTextColor="@color/white"-->
-    <!--app:tabIndicatorColor="@color/white"-->
-    <!--app:tabIndicatorHeight="0.5dp"-->
-    <!--app:tabTextAppearance="@style/MyCustomTextAppearance"-->
-    <!--&gt;-->
-
-<!--</android.support.design.widget.TabLayout>-->
-    <com.astuetz.PagerSlidingTabStrip
-        android:id="@+id/psts_pagerTab"
+    <com.hongqing.minjiemusic.utils.PagerSlidingTabStrip
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="match_parent"
-        app:pstsShouldExpand="true"
-        app:pstsIndicatorColor="#bcbf0d"
-
-        app:pstsUnderlineColor="#1f9fc6"
-        app:pstsDividerColor="#661faac6"
-        app:pstsIndicatorHeight="5dp">
-
-    </com.astuetz.PagerSlidingTabStrip>
-    <!--<TextView-->
-        <!--android:id="@+id/tv_title_listen"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_weight="1"-->
-        <!--android:gravity="center"-->
-        <!--android:text="@string/listen"-->
-        <!--android:textColor="@color/textColorWhite" />-->
-  <!--<TextView-->
-        <!--android:id="@+id/tv_title_look"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_weight="1"-->
-      <!--android:gravity="center"-->
-        <!--android:text="@string/look"-->
-        <!--android:textColor="@color/textColorWhite" />-->
-  <!--<TextView-->
-        <!--android:id="@+id/tv_title_sing"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_weight="1"-->
-      <!--android:gravity="center"-->
-        <!--android:text="@string/sing"-->
-        <!--android:textColor="@color/textColorWhite" />-->
-
-    <ImageButton
+        android:layout_height="50dp"
+        android:id="@+id/strip"
+        />
+    <ImageView
         android:id="@+id/title_search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
        android:layout_margin="8dp"
-        android:background="@drawable/search_item_icon" />
+       />
 </LinearLayout>

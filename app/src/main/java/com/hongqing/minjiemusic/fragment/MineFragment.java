@@ -9,11 +9,12 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
-import com.astuetz.PagerSlidingTabStrip;
 import com.hongqing.minjiemusic.R;
 import com.hongqing.minjiemusic.adapter.MyViewPagerAdapter;
+import com.hongqing.minjiemusic.utils.PagerSlidingTabStrip;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import java.util.ArrayList;
@@ -33,19 +34,13 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     private TabLayout tabLayout;
     private String[] titles = {"看", "听", "唱"};
     private int[] tabBackground = {Color.WHITE};
-    private PagerSlidingTabStrip psts_pagerTab;
+   private PagerSlidingTabStrip strip;
+    private ImageView title_search;
 
     @Override
     public void onResume() {
         super.onResume();
         viewPager.setCurrentItem(0);
-        if (viewPager.getCurrentItem()==0){
-            psts_pagerTab.setTextColor(Color.RED);
-        }else if (viewPager.getCurrentItem()==1) {
-            psts_pagerTab.setTextColor(Color.WHITE);
-        }else  if (viewPager.getCurrentItem()==2) {
-            psts_pagerTab.setTextColor(Color.WHITE);
-        }
         }
 
     @Nullable
@@ -60,41 +55,64 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     private void initView() {
         title_kuGou = (ImageView) view.findViewById(R.id.title_kuGou);
         viewPager = (ViewPager) view.findViewById(R.id.viewPager);
-//        tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
-        psts_pagerTab= (PagerSlidingTabStrip) view.findViewById(R.id.psts_pagerTab);
-//        psts_pagerTab.setTextDirection();  方向
-         psts_pagerTab.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-             @Override
-             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        title_search = (ImageView) view.findViewById(R.id.title_search);
+        strip= (PagerSlidingTabStrip) view.findViewById(R.id.strip);
 
-             }
-
-             @Override
-             public void onPageSelected(int position) {
-                   if (position==0){
-                       psts_pagerTab.setTextColor(Color.RED);
-                   }else  if (position==1){
-                       psts_pagerTab.setTextColor(Color.RED);
-                   }if (position==2){
-                     psts_pagerTab.setTextColor(Color.RED);
-                 }else{
-                       psts_pagerTab.setTextColor(Color.WHITE);
-                   }
-
-             }
-             @Override
-             public void onPageScrollStateChanged(int state) {
-
-//                 psts_pagerTab.setTextColor(Color.RED);
-             }
-         });
         initFragment();
         adapter = new MyViewPagerAdapter(
                 getActivity().getSupportFragmentManager(), fragmentList, titles);
         viewPager.setAdapter(adapter);
-        psts_pagerTab.setViewPager(viewPager);
+        setPagerStripStyle(strip);//设置样式
+        setPagerStripListener(strip);//设置监听事件
+        strip.setViewPager(viewPager);
         initListener();
 
+    }
+
+    private void setPagerStripListener(PagerSlidingTabStrip strip) {
+        strip.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                if (position==1){
+                    title_search.setImageResource(R.mipmap.title_person);
+                }
+                else {
+                    title_search.setImageResource(R.mipmap.search_normal);
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+
+    //设置头部tab的样式   重写的是pagerSlidingTabStrip
+    private void setPagerStripStyle(PagerSlidingTabStrip strip) {
+        //tab text color
+        strip.setTextColor(Color.parseColor("#dfdfdf"));
+        //tab chose text color
+        strip.setTabChoseTextColor(Color.parseColor("#ffffff"));
+        //tab text size
+        strip.setTextSize(15);
+        //tab chose text size
+        strip.setTabChoseTextSize(18);
+        //indicator color
+        strip.setIndicatorColor(Color.WHITE);
+        //indicator height  指示器的高度
+        strip.setIndicatorHeight(4);
+        //underline height
+        strip.setUnderlineHeight(1);
+        //expand?  是否扩大
+        strip.setShouldExpand(true);
+        //divider between tab   tab间分割线的颜色
+        strip.setDividerColor(android.R.color.transparent);
     }
 
     private void initFragment() {
