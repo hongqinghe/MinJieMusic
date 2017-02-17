@@ -1,12 +1,15 @@
 package com.hongqing.minjiemusic;
 
+import android.Manifest;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -49,13 +52,15 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         x.view().inject(this);
+        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ,Manifest.permission.READ_EXTERNAL_STORAGE},1);
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mineFragment = MineFragment.getInstance();
+        mineFragment =new MineFragment();
         FragmentManager  fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(R.id.fragment_layout_main,mineFragment);

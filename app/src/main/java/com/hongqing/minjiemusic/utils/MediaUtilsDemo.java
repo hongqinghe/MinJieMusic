@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-public class MediaUtils {
+public class MediaUtilsDemo {
 
 	// 获取专辑封面的Uri
 	private static final Uri albumArtUri = Uri
@@ -50,6 +50,12 @@ public class MediaUtils {
         cursor.close();
         return count;
     }
+
+
+
+
+
+
 	/**
 	 * 根据歌曲id查询歌曲信息
 	 *
@@ -297,52 +303,6 @@ public class MediaUtils {
 		return bm;
 	}
 
-	/**
-	 * 查询歌手对应的歌曲总数
-	 * @param context
-	 * @param aa
-	 * @return
-	 */
-	public static long[] getMp3CountSinger(Context context,String aa) {
-		Cursor cursor = context.getContentResolver().query(
-				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-				new String[] { MediaStore.Audio.Media.TITLE},
-				MediaStore.Audio.Media.ARTIST+"="+"\'"+aa+"\'",null,
-				null);
-		long[] ids = null;
-		if (cursor != null) {
-			ids = new long[cursor.getCount()];
-			for (int i = 0; i < cursor.getCount(); i++) {
-				cursor.moveToNext();
-				ids[i] = cursor.getLong(0);
-			}
-		}
-		cursor.close();
-		return ids;
-	}
-	/**
-	 * 查询专辑对应的歌曲总数
-	 * @param context
-	 * @param aa
-	 * @return
-	 */
-	public static long[] getMp3CountAlbum(Context context,long aa) {
-		Cursor cursor = context.getContentResolver().query(
-				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-				new String[] { MediaStore.Audio.Media.ALBUM},
-				MediaStore.Audio.Media.ARTIST_ID+"="+aa,null,
-				null);
-		long[] ids = null;
-		if (cursor != null) {
-			ids = new long[cursor.getCount()];
-			for (int i = 0; i < cursor.getCount(); i++) {
-				cursor.moveToNext();
-				ids[i] = cursor.getLong(0);
-			}
-		}
-		cursor.close();
-		return ids;
-	}
 	/**
 	 * 获取专辑封面位图对象
 	 *

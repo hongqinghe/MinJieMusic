@@ -25,6 +25,8 @@ public class Mp3Info extends ArrayList<String> {
 	private String title;//歌名
     @Column(name="artist" )
 	private String artist;//艺术家
+	@Column(name="artist" )
+	private String artistId;//艺术家
     @Column(name="album")
 	private String album;//专辑
     @Column(name="albumId")
@@ -38,8 +40,13 @@ public class Mp3Info extends ArrayList<String> {
     @Column(name="isMusic")
 	private int isMusic;//是否为音乐
 
-
-    public long getMp3InfoId() {
+	public String getArtistId() {
+		return artistId;
+	}
+	public void setArtistId(String artistId) {
+		this.artistId = artistId;
+	}
+	public long getMp3InfoId() {
         return mp3InfoId;
     }
 
@@ -118,20 +125,22 @@ public class Mp3Info extends ArrayList<String> {
 		this.isMusic = isMusic;
 	}
 
-    @Override
-    public String toString() {
-        return "Mp3Info{" +
-                "album='" + album + '\'' +
-                ", id=" + id +
-                ", mp3InfoId=" + mp3InfoId +
-                ", playTime=" + playTime +
-                ", title='" + title + '\'' +
-                ", artist='" + artist + '\'' +
-                ", albumId=" + albumId +
-                ", duration=" + duration +
-                ", size=" + size +
-                ", url='" + url + '\'' +
-                ", isMusic=" + isMusic +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "Mp3Info{" +
+				"id=" + id +
+				", mp3InfoId=" + mp3InfoId +
+				", playTime=" + playTime +
+				", isLike=" + isLike +
+				", title='" + title + '\'' +
+				", artist='" + artist + '\'' +
+				", artistId='" + artistId + '\'' +
+				", album='" + album + '\'' +
+				", albumId=" + albumId +
+				", duration=" + duration +
+				", size=" + size +
+				", url='" + url + '\'' +
+				", isMusic=" + isMusic +
+				'}';
+	}
 }

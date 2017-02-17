@@ -1,6 +1,5 @@
 package com.hongqing.minjiemusic.adapter;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hongqing.minjiemusic.R;
 import com.hongqing.minjiemusic.utils.MediaUtils;
-import com.hongqing.minjiemusic.utils.MediaUtilsDemo;
 import com.hongqing.minjiemusic.vo.Mp3Info;
 
 import java.util.List;
@@ -24,20 +22,19 @@ import java.util.List;
  * Created by 贺红清 on 2017/2/16.
  */
 
-public class Singer_listViewAdapter extends BaseAdapter {
+public class Album_listViewAdapter extends BaseAdapter {
     private Context context;
     private List<Mp3Info> mp3InfoList;
     private long[] count;
-    public Singer_listViewAdapter(Context context) {
+    public Album_listViewAdapter(Context context) {
         this.context = context;
     }
 
-    public Singer_listViewAdapter(Context context, List<Mp3Info> mp3InfoList) {
+    public Album_listViewAdapter(Context context, List<Mp3Info> mp3InfoList) {
         this.context = context;
         this.mp3InfoList = mp3InfoList;
     }
-
-    public Singer_listViewAdapter(Context context, List<Mp3Info> mp3InfoList, long[] count) {
+    public Album_listViewAdapter(Context context, List<Mp3Info> mp3InfoList, long[] count) {
         this.context = context;
         this.mp3InfoList = mp3InfoList;
         this.count = count;
@@ -61,21 +58,25 @@ public class Singer_listViewAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View contentView, ViewGroup viewGroup) {
         if (contentView==null){
-            contentView= LayoutInflater.from(context).inflate(R.layout.singer_listview_item_layout,null);
+            contentView= LayoutInflater.from(context).inflate(R.layout.album_listeview_item_layout,null);
         }
-        SimpleDraweeView sdv_singerPhoto=MyViewHolder.getView(contentView,R.id.sdv_singerPhoto,null);
-
-        TextView tv_song_Count_singer=MyViewHolder.getView(contentView,R.id.tv_song_Count_singer,null);
-        TextView tv_singer_singer=MyViewHolder.getView(contentView,R.id.tv_singer_singer,null);
-        Mp3Info mp3Info=mp3InfoList.get(position);
-         count=MediaUtils.getMp3CountSinger(context,mp3Info.getArtist());
+//        SimpleDraweeView sdv_singerPhoto=MyViewHolder.getView(contentView,R.id.sdv_singerPhoto,null);
+       final ImageView sdv_singerPhoto=MyViewHolder.getView(contentView,R.id.sdv_singerPhoto,null);
+        final    TextView tv_song_count_album=MyViewHolder.getView(contentView,R.id.tv_song_count_album,null);
+        final TextView tv_album=MyViewHolder.getView(contentView,R.id.tv_album,null);
+        final Mp3Info mp3Info=mp3InfoList.get(position);
+         count=MediaUtils.getMp3CountAlbum(context,mp3Info.getAlbumId());
+        System.out.println(count.length);
+        //根据iD查出对应的专辑照片
         Bitmap bitmap=MediaUtils.getArtwork(context,mp3Info.getMp3InfoId(),mp3Info.getAlbumId(),true,false);
           //拿到了bitmap对象之后  将bitmap转换为uri
         Uri uri = Uri.parse(MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, null, null));
+        if (count.length>=1){
+            sdv_singerPhoto.setImageBitmap(bitmap);
+            tv_song_count_album.setText(count.length+"首");
+            tv_album.setText(mp3Info.getAlbum());
+        }
 
-        sdv_singerPhoto.setImageURI(uri);
-        tv_song_Count_singer.setText(count.length+"首");
-        tv_singer_singer.setText(mp3Info.getArtist());
         return contentView;
     }
 }

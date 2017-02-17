@@ -11,7 +11,9 @@
       android:id="@+id/fragment_layout_main"
       android:layout_width="match_parent"
       android:layout_height="0dp"
-      android:layout_weight="1">
+      android:layout_weight="1"
+      >
+
 
   </FrameLayout>
 <com.hongqing.minjiemusic.view.SongsBottom_View

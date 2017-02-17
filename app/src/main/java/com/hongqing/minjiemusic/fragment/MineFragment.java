@@ -43,13 +43,13 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 
         }
     //单例设计模式
-    private MineFragment() {
+    public MineFragment() {
     }
-    private static MineFragment mineFragment = new MineFragment();
-
-    public static MineFragment getInstance() {
-        return mineFragment;
-    }
+//    private static MineFragment mineFragment = new MineFragment();
+//
+//    public static MineFragment getInstance() {
+//        return mineFragment;
+//    }
 
     @Nullable
     @Override
@@ -88,12 +88,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                     title_search.setImageResource(R.mipmap.search_normal);
                 }
             }
-
             @Override
             public void onPageSelected(int position) {
-
             }
-
             @Override
             public void onPageScrollStateChanged(int state) {
 
