@@ -29,28 +29,6 @@ public class BaseFragment extends Fragment{
         manager=getActivity().getSupportFragmentManager();
         ft=manager.beginTransaction();
     }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
-    @Subscribe(threadMode = ThreadMode.POSTING)
-    public void MessageSubscriber(MessageEvent event){
-        Log.i("MessageSubscriber",event.type+"");
-        if (event.type== MessageEventType.SHOW_LOCAL_SONGS){
-            ft.replace(R.id.fragment_layout_main,LocalSongsFragment.getInstance());
-            ft.commit();
-        }
-
-    }
-
     public void toast(String msg){
         Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
     }

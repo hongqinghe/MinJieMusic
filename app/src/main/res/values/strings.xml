@@ -24,4 +24,6 @@
     <string name="sort_by">排序方式</string>
     <string name="play_in_order">顺序播放</string>
     <string name="song_name">歌名</string>
+    <string name="singer">歌手</string>
+    <string name="singer_song_count">总数</string>
 </resources>

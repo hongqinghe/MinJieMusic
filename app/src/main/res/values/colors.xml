@@ -5,7 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="slidingmenuColor">#a00fa0ed</color>
     <color name="textColorWhite">#fbfbfb</color>
-    <color name="white">#fffff3</color>
+    <color name="white">#ffffff</color>
     <color name="backgroundBoldColor">#800fa0ed</color>
     <color name="background_title">#f20fa0ed</color>
     <color name="backgroundSwitchSelected">#14b92c</color>
@@ -20,6 +20,7 @@
     <color name="listenColor">#4586a9</color>
     <color name="listen2Color">#6dbbe5</color>
     <color name="text_gray">#e6e6e6</color>
+    <color name="back_gray">#FF666666</color>
     <color name="backgroundColor_line">#e0e6e0</color>
     <color name="textColor_black">#2b2b2b</color>
 

@@ -6,8 +6,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.hongqing.minjiemusic.fragment.LocalSongsFragment;
 import com.hongqing.minjiemusic.fragment.LookFragment;
@@ -35,23 +37,30 @@ public class MainActivity extends BaseActivity {
     public static MediaPlayer mediaPlayer;
     private int index = 0;//定义下标来控制播放哪一首歌
     private boolean isNext = true;//用来判断是不是暂停状态下单价下一首
-    private ArrayList<Mp3Info> arrayList;
+    private ArrayList<Mp3Info> mp3InfoList;
     private Mp3Info mp3Info;
+    private MineFragment mineFragment;
+    private LocalSongsFragment localSongsFragment;
+    private ViewPager viewpager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         x.view().inject(this);
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        fragmentManager = getSupportFragmentManager();
-        ft = fragmentManager.beginTransaction();
-        ft.replace(R.id.fragment_layout_main, MineFragment.getInstance());
-        ft.commit();
+        mineFragment = MineFragment.getInstance();
+        FragmentManager  fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.add(R.id.fragment_layout_main,mineFragment);
+        transaction.commit();
+//        EventBus.getDefault().post(new MessageEvent(MessageEventType.BACK_MINE));
         mediaPlayer = new MediaPlayer();
         songBottom_view = (SongsBottom_View) findViewById(R.id.songBottom_view);
         initListener();
@@ -69,27 +78,20 @@ public class MainActivity extends BaseActivity {
         EventBus.getDefault().unregister(this);
     }
 
-    @Subscribe(threadMode = ThreadMode.POSTING)
-    public void MessageSubscriber(MessageEvent event) {
-        Log.i("MessageSubscriber", event.type + "");
-        if (event.type == MessageEventType.PLAY_MUSIC) {
-//            System.out.println((event.data).toString() + "输出得到的数据");
-            int id = event.position;
-            arrayList = (ArrayList<Mp3Info>) event.data;
-            System.out.println(arrayList.get(id).toString() + "this   is info");
-            mp3Info = arrayList.get(id);
-            songBottom_view.setSongInfo(mp3Info.getTitle(), mp3Info.getArtist());
-            musicStart(mp3Info);
-        }
-    }
 
     //播放音乐
     private void musicStart(Mp3Info mp3Info) {
         if (ispasue) {
+            if (isNext){
+                ispasue = false;
+                isNext = false;
+                mediaPlayer.reset();
+                musicStart(mp3Info);
+            }
             mediaPlayer.start();
             isplaying = false;
         } else {
-            if (isplaying) {  //判断是不是正在播放  ，如果正在播放则就释放 然后在进行播放
+            if (mediaPlayer.isPlaying()) {  //判断是不是正在播放  ，如果正在播放则就释放 然后在进行播放
                 mediaPlayer.reset();
                 mediaPlayer.stop();
             }
@@ -101,6 +103,7 @@ public class MainActivity extends BaseActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            songBottom_view.setSongInfo(mp3Info.getTitle(), mp3Info.getArtist());
             isplaying=true;
             ispasue=false;
             songBottom_view.setPlay_bottom(true);
@@ -127,7 +130,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void setNextListener() {
                 //下一首
-
+               musicNext();
             }
 
             @Override
@@ -149,6 +152,53 @@ public class MainActivity extends BaseActivity {
             songBottom_view.setPlay_bottom(true);
             isplaying=true;
             ispasue=false;
+        }
+    }
+    private void musicNext() {
+
+        if (index + 1 < mp3InfoList.size()) {
+            index += 1;
+        } else {
+            index = 0;//置为0循环播放
+        }
+        isNext = true;//每次点击的时候都置为TRUE
+        mp3Info=mp3InfoList.get(index);
+        musicStart(mp3Info);
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.POSTING)
+    public void MessageSubscriber(MessageEvent event) {
+        Log.i("MessageSubscriber", event.type + "");
+        if (event.type == MessageEventType.PLAY_MUSIC) {
+            index = event.position;
+            mp3InfoList = (ArrayList<Mp3Info>) event.data;
+//            System.out.println(mp3InfoList.get(index).toString() + "this   is info");
+            mp3Info = mp3InfoList.get(index);
+            songBottom_view.setSongInfo(mp3Info.getTitle(), mp3Info.getArtist());
+            musicStart(mp3Info);
+        }
+    }
+    @Subscribe(threadMode = ThreadMode.POSTING)
+    public void MessageSunsriberBack(MessageEvent event){
+        if (event.type==MessageEventType.BACK_MINE){
+          FragmentManager  fragmentManager = getSupportFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            fragmentManager.popBackStack();
+            transaction.commit();
+        }
+    }
+    @Subscribe
+    public void MessageSubscriberLocal(MessageEvent event){
+        Log.i("MessageSubscriber",event.type+"");
+        if (event.type== MessageEventType.SHOW_LOCAL_SONGS) {
+            viewpager = (ViewPager) findViewById(R.id.viewPager_localSongs);
+            FragmentManager  fragmentManager = getSupportFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.add(R.id.fragment_layout_main, LocalSongsFragment.getInstance());
+            transaction.hide(mineFragment);  //隐藏当前的Fragment
+            transaction.addToBackStack(null);//添加回退栈
+            transaction.commit();
         }
     }
 

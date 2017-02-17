@@ -21,7 +21,7 @@ import java.util.List;
 public class MyViewPagerAdapter extends FragmentPagerAdapter {
     private Context context;
     private List<Fragment> fragmentList;
-    private String[] titles = {"看", "听", "唱"};
+    private String[] titles ;
     public MyViewPagerAdapter(FragmentManager fm) {
         super(fm);
     }

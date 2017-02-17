@@ -14,8 +14,10 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.hongqing.minjiemusic.R;
+import com.hongqing.minjiemusic.utils.MediaUtils;
 import com.hongqing.minjiemusic.vo.MessageEvent;
 import com.hongqing.minjiemusic.vo.MessageEventType;
 
@@ -33,8 +35,7 @@ public class ListenFragment extends BaseFragment implements View.OnClickListener
     private float mDensity;
     private int mHiddenViewMeasuredHeight;
     private LinearLayout line_localSons;
-    private FragmentManager manager;
-    private FragmentTransaction ft;
+    private TextView tv_song_count;
 
     @Override
     public void onResume() {
@@ -42,8 +43,6 @@ public class ListenFragment extends BaseFragment implements View.OnClickListener
         //        根据手机的分辨率从 dp 的单位 转成为 px(像素)
         mDensity = getResources().getDisplayMetrics().density;
         mHiddenViewMeasuredHeight = (int) (mDensity * 50 + 0.5);
-        manager = getActivity().getSupportFragmentManager();
-        ft = manager.beginTransaction();
     }
 
     //单例设计模式
@@ -68,6 +67,8 @@ public class ListenFragment extends BaseFragment implements View.OnClickListener
         ib_tool_next = (ImageButton) view.findViewById(R.id.ib_tool_next);
         line_show_hide = (LinearLayout) view.findViewById(R.id.line_show_hide);
         line_localSons = (LinearLayout) view.findViewById(R.id.line_localSongs);
+        tv_song_count = (TextView) view.findViewById(R.id.tv_song_Count);
+        tv_song_count.setText(MediaUtils.getMp3Count(getContext())+"首");
         initListener();
     }
 

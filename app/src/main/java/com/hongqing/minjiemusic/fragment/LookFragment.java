@@ -26,4 +26,6 @@ public class LookFragment extends BaseFragment {
     public  static  LookFragment  getInstance(){
         return lookFragment;
     }
+
+
 }

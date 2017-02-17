@@ -32,7 +32,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     private MyViewPagerAdapter adapter;
     private List<Fragment> fragmentList;
     private TabLayout tabLayout;
-    private String[] titles = {"看", "听", "唱"};
+    private String[] titles = {"听", "看", "唱"};
     private int[] tabBackground = {Color.WHITE};
    private PagerSlidingTabStrip strip;
     private ImageView title_search;
@@ -40,7 +40,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        viewPager.setCurrentItem(0);
+
         }
     //单例设计模式
     private MineFragment() {
@@ -56,7 +56,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.mine_fragment_layout, null);
         initView();
-        initSlidingment();
+        initSlidingmenu();
+        viewPager.setCurrentItem(0);
         return view;
     }
 
@@ -125,15 +126,15 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     private void initFragment() {
         fragmentList = new ArrayList<>();
         fragmentList.add(ListenFragment.getInstance());
-        fragmentList.add(SingFragment.getInstance());
         fragmentList.add(LookFragment.getInstance());
+        fragmentList.add(SingFragment.getInstance());
     }
     private void initListener() {
         title_kuGou.setOnClickListener(this);
     }
 
     //设置侧滑菜单
-    private void initSlidingment() {
+    private void initSlidingmenu() {
         menu = new SlidingMenu(getContext());
         menu.setMode(SlidingMenu.LEFT);
         //设置触摸屏幕的样式    设置边缘模式滑动打开menu(整个屏幕，边缘，不能通过手势启动三个参数)

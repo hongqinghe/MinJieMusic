@@ -92,9 +92,11 @@
             android:background="@drawable/local_play_icon" />
 
         <TextView
+            android:id="@+id/tv_song_Count"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:textColor="@color/textColorWhite"
             android:drawableRight="@mipmap/local_next"
             android:gravity="center_vertical|end"
             android:text="@string/total_number" />

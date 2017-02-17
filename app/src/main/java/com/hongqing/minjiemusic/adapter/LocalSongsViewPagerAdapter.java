@@ -43,4 +43,8 @@ public class LocalSongsViewPagerAdapter extends FragmentPagerAdapter {
         return stringList.get(position);
     }
 
+//    @Override
+//    public int getItemPosition(Object object) {
+//        return 0;
+//    }
 }
