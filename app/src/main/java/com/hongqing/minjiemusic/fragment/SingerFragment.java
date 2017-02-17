@@ -45,11 +45,4 @@ public class SingerFragment extends BaseFragment {
         singer_listView.setAdapter(adapter);
     }
 
-    //单例设计模式
-    private SingerFragment() {
-    }
-    private static SingerFragment singerFragment = new SingerFragment();
-    public static SingerFragment getInstance() {
-        return singerFragment;
-    }
 }

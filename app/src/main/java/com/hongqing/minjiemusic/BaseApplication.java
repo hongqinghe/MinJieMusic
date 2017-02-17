@@ -16,5 +16,6 @@ public class BaseApplication extends Application {
         super.onCreate();
         Fresco.initialize(this);//frasco的初始化
         x.Ext.init(this);//xutils的初始化
+
     }
 }

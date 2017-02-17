@@ -16,15 +16,9 @@ public class LookFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.slidingmenu,null);
+        View view=inflater.inflate(R.layout.listen_fragment_layout,null);
         return view;
 
-    }
-    //单例设计模式
-    private LookFragment(){}
-    private static LookFragment lookFragment  =new LookFragment();
-    public  static  LookFragment  getInstance(){
-        return lookFragment;
     }
 
 

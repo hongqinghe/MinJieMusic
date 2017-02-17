@@ -20,13 +20,4 @@ public class FolderFragment extends BaseFragment {
         View view=inflater.inflate(R.layout.singles_fragment_layout,null);
         return view;
     }
-    //单例设计模式
-    private FolderFragment() {
-    }
-
-    private static FolderFragment folderFragment = new FolderFragment();
-
-    public static FolderFragment getInstance() {
-        return folderFragment;
-    }
 }

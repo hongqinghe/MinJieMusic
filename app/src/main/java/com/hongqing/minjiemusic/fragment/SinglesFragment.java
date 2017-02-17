@@ -59,15 +59,7 @@ public class SinglesFragment extends BaseFragment implements AdapterView.OnItemC
         listView_singles.setOnItemClickListener(this);
     }
 
-    //单例设计模式
-    private SinglesFragment() {
-    }
 
-    private static SinglesFragment singlesFragment = new SinglesFragment();
-
-    public static SinglesFragment getInstance() {
-        return singlesFragment;
-    }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {

@@ -32,7 +32,6 @@ import java.util.ArrayList;
 
 public class MainActivity extends BaseActivity {
 
-    private FragmentManager fragmentManager;
     private FragmentTransaction ft;
     private SongsBottom_View songBottom_view;
     private boolean ispasue = false;//是否是暂停播放
@@ -52,6 +51,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         x.view().inject(this);
+        //添加6.0权限
         ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE
         ,Manifest.permission.READ_EXTERNAL_STORAGE},1);
 
@@ -65,7 +65,6 @@ public class MainActivity extends BaseActivity {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(R.id.fragment_layout_main,mineFragment);
         transaction.commit();
-//        EventBus.getDefault().post(new MessageEvent(MessageEventType.BACK_MINE));
         mediaPlayer = new MediaPlayer();
         songBottom_view = (SongsBottom_View) findViewById(R.id.songBottom_view);
         initListener();
@@ -111,6 +110,7 @@ public class MainActivity extends BaseActivity {
             songBottom_view.setSongInfo(mp3Info.getTitle(), mp3Info.getArtist());
             isplaying=true;
             ispasue=false;
+            isNext=false;
             songBottom_view.setPlay_bottom(true);
 
         }
@@ -160,18 +160,19 @@ public class MainActivity extends BaseActivity {
         }
     }
     private void musicNext() {
-
-        if (index + 1 < mp3InfoList.size()) {
-            index += 1;
-        } else {
-            index = 0;//置为0循环播放
+        //判断不为空的时候进行传递
+        if (mp3Info != null) {
+            if (index + 1 < mp3InfoList.size()) {
+                index += 1;
+            } else {
+                index = 0;//置为0循环播放
+            }
+            isNext = true;//每次点击的时候都置为TRUE
+            mp3Info = mp3InfoList.get(index);
+            musicStart(mp3Info);
         }
-        isNext = true;//每次点击的时候都置为TRUE
-        mp3Info=mp3InfoList.get(index);
-        musicStart(mp3Info);
+
     }
-
-
     @Subscribe(threadMode = ThreadMode.POSTING)
     public void MessageSubscriber(MessageEvent event) {
         Log.i("MessageSubscriber", event.type + "");
@@ -181,7 +182,7 @@ public class MainActivity extends BaseActivity {
 //            System.out.println(mp3InfoList.get(index).toString() + "this   is info");
             mp3Info = mp3InfoList.get(index);
             songBottom_view.setSongInfo(mp3Info.getTitle(), mp3Info.getArtist());
-            musicStart(mp3Info);
+            musicPlay();
         }
     }
     @Subscribe(threadMode = ThreadMode.POSTING)
@@ -200,7 +201,7 @@ public class MainActivity extends BaseActivity {
             viewpager = (ViewPager) findViewById(R.id.viewPager_localSongs);
             FragmentManager  fragmentManager = getSupportFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.add(R.id.fragment_layout_main, LocalSongsFragment.getInstance());
+            transaction.add(R.id.fragment_layout_main,new LocalSongsFragment());
             transaction.hide(mineFragment);  //隐藏当前的Fragment
             transaction.addToBackStack(null);//添加回退栈
             transaction.commit();

@@ -58,15 +58,6 @@ public class LocalSongsFragment extends BaseFragment implements View.OnClickList
         return view;
     }
 
-    //    单例设计模式
-    private LocalSongsFragment() {
-    }
-
-    private static LocalSongsFragment localSongsFragment = new LocalSongsFragment();
-
-    public static LocalSongsFragment getInstance() {
-        return localSongsFragment;
-    }
 
     private void initView() {
         psts_pagerStrip = (PagerSlidingTabStrip) view.findViewById(R.id.psts_pagerStrop);
@@ -99,10 +90,10 @@ public class LocalSongsFragment extends BaseFragment implements View.OnClickList
 
     private void initFragment() {
         fragmentList = new ArrayList<>();
-        fragmentList.add(SinglesFragment.getInstance());
-        fragmentList.add(SingerFragment.getInstance());
-        fragmentList.add(AlbumFragment.getInstance());
-        fragmentList.add(FolderFragment.getInstance());
+        fragmentList.add(new SinglesFragment());
+        fragmentList.add(new SingerFragment());
+        fragmentList.add(new AlbumFragment());
+        fragmentList.add(new FolderFragment());
     }
 
     private void initListener() {

@@ -20,15 +20,7 @@ import org.greenrobot.eventbus.ThreadMode;
  */
 
 public class BaseFragment extends Fragment{
-    private FragmentManager manager;
-    private FragmentTransaction ft;
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        manager=getActivity().getSupportFragmentManager();
-        ft=manager.beginTransaction();
-    }
     public void toast(String msg){
         Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
     }

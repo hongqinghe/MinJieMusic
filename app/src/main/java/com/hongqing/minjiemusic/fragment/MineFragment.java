@@ -45,12 +45,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     //单例设计模式
     public MineFragment() {
     }
-//    private static MineFragment mineFragment = new MineFragment();
-//
-//    public static MineFragment getInstance() {
-//        return mineFragment;
-//    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -69,7 +63,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 
         initFragment();
         adapter = new MyViewPagerAdapter(
-                getActivity().getSupportFragmentManager(), fragmentList, titles);
+                this.getChildFragmentManager(), fragmentList, titles);
         viewPager.setAdapter(adapter);
         setPagerStripStyle(strip);//设置样式
         setPagerStripListener(strip);//设置监听事件
@@ -122,9 +116,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 
     private void initFragment() {
         fragmentList = new ArrayList<>();
-        fragmentList.add(ListenFragment.getInstance());
-        fragmentList.add(LookFragment.getInstance());
-        fragmentList.add(SingFragment.getInstance());
+        fragmentList.add(new ListenFragment());
+        fragmentList.add(new LookFragment());
+        fragmentList.add(new SingFragment());
     }
     private void initListener() {
         title_kuGou.setOnClickListener(this);

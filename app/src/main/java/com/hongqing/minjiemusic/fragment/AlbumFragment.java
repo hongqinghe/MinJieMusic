@@ -40,12 +40,5 @@ public class AlbumFragment extends BaseFragment {
         singer_listView.setAdapter(adapter);
     }
 
-    //单例设计模式
-    private AlbumFragment() {
-    }
-    private static AlbumFragment albumFragment = new AlbumFragment();
 
-    public static AlbumFragment getInstance() {
-        return albumFragment;
-    }
 }

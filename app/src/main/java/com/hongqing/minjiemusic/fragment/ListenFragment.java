@@ -45,15 +45,6 @@ public class ListenFragment extends BaseFragment implements View.OnClickListener
         mHiddenViewMeasuredHeight = (int) (mDensity * 50 + 0.5);
     }
 
-    //单例设计模式
-    private ListenFragment() {
-    }
-
-    private static ListenFragment listenFragment = new ListenFragment();
-
-    public static ListenFragment getInstance() {
-        return listenFragment;
-    }
 
     @Nullable
     @Override
