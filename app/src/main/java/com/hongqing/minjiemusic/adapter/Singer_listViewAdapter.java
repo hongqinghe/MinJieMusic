@@ -18,6 +18,7 @@ import com.hongqing.minjiemusic.utils.MediaUtils;
 import com.hongqing.minjiemusic.utils.MediaUtilsDemo;
 import com.hongqing.minjiemusic.vo.Mp3Info;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,29 +29,41 @@ public class Singer_listViewAdapter extends BaseAdapter {
     private Context context;
     private List<Mp3Info> mp3InfoList;
     private long[] count;
+    private List<Long> art_idList;
+    private List<String > stringList;
+    private View foot;
     public Singer_listViewAdapter(Context context) {
         this.context = context;
     }
 
-    public Singer_listViewAdapter(Context context, List<Mp3Info> mp3InfoList) {
+    public Singer_listViewAdapter(Context context, List<Mp3Info> mp3InfoList,View foot) {
         this.context = context;
         this.mp3InfoList = mp3InfoList;
+        stringList=new ArrayList<>();
+        art_idList=new ArrayList<>();
+        this.foot=foot;
+        for (int i=0;i<mp3InfoList.size();i++){
+            stringList.add(mp3InfoList.get(i).getArtist());
+            art_idList.add(mp3InfoList.get(i).getMp3InfoId());
+        }
+        TextView tv_album_footView= (TextView) foot.findViewById(R.id.tv_album_footView);
+        tv_album_footView.setText(stringList.size()+"个歌手");
     }
-
-    public Singer_listViewAdapter(Context context, List<Mp3Info> mp3InfoList, long[] count) {
+    public Singer_listViewAdapter(Context context, List<Mp3Info> mp3InfoList, long[] count ,View foot) {
         this.context = context;
         this.mp3InfoList = mp3InfoList;
         this.count = count;
+
     }
 
     @Override
     public int getCount() {
-        return mp3InfoList.size();
+        return stringList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mp3InfoList.get(position);
+        return stringList.get(position);
     }
 
     @Override
@@ -68,11 +81,11 @@ public class Singer_listViewAdapter extends BaseAdapter {
         TextView tv_song_Count_singer=MyViewHolder.getView(contentView,R.id.tv_song_Count_singer,null);
         TextView tv_singer_singer=MyViewHolder.getView(contentView,R.id.tv_singer_singer,null);
         Mp3Info mp3Info=mp3InfoList.get(position);
-         count=MediaUtils.getMp3CountSinger(context,mp3Info.getArtist());
-        Bitmap bitmap=MediaUtils.getArtwork(context,mp3Info.getMp3InfoId(),mp3Info.getAlbumId(),true,false);
+         count=MediaUtils.getMp3CountSinger(context,stringList.get(position));
+//        MediaUtils.getArtwork(context,0,)
+        Bitmap bitmap=MediaUtils.getArtwork(context,art_idList.get(position),mp3Info.getAlbumId(),true,false);
           //拿到了bitmap对象之后  将bitmap转换为uri
         Uri uri = Uri.parse(MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, null, null));
-
         sdv_singerPhoto.setImageURI(uri);
         tv_song_Count_singer.setText(count.length+"首");
         tv_singer_singer.setText(mp3Info.getArtist());

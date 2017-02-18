@@ -45,7 +45,11 @@ public class MainActivity extends BaseActivity {
     private LocalSongsFragment localSongsFragment;
     private ViewPager viewpager;
 
-
+    /**
+     * 在onCreate中创建对象 ，要不在activity不可见的时候他会重新创建对象，
+     * 会在成一个fragment already add... 这个异常
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,12 +58,6 @@ public class MainActivity extends BaseActivity {
         //添加6.0权限
         ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE
         ,Manifest.permission.READ_EXTERNAL_STORAGE},1);
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         mineFragment =new MineFragment();
         FragmentManager  fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -69,7 +67,6 @@ public class MainActivity extends BaseActivity {
         songBottom_view = (SongsBottom_View) findViewById(R.id.songBottom_view);
         initListener();
     }
-
     @Override
     public void onStart() {
         super.onStart();
@@ -81,7 +78,6 @@ public class MainActivity extends BaseActivity {
         super.onStop();
         EventBus.getDefault().unregister(this);
     }
-
 
     //播放音乐
     private void musicStart(Mp3Info mp3Info) {
@@ -122,7 +118,6 @@ public class MainActivity extends BaseActivity {
             @Override
             public void setSimpleDrawerViewListener() {
                 //图片的点击事件
-
             }
 
             @Override
@@ -149,6 +144,7 @@ public class MainActivity extends BaseActivity {
         if (isplaying){
             mediaPlayer.pause();
             ispasue=true;
+            isNext=true;
             isplaying=false;
             songBottom_view.setPlay_bottom(false);
         }else {
@@ -156,6 +152,7 @@ public class MainActivity extends BaseActivity {
             musicStart(mp3Info);
             songBottom_view.setPlay_bottom(true);
             isplaying=true;
+            isNext=false;
             ispasue=false;
         }
     }
@@ -179,10 +176,9 @@ public class MainActivity extends BaseActivity {
         if (event.type == MessageEventType.PLAY_MUSIC) {
             index = event.position;
             mp3InfoList = (ArrayList<Mp3Info>) event.data;
-//            System.out.println(mp3InfoList.get(index).toString() + "this   is info");
             mp3Info = mp3InfoList.get(index);
             songBottom_view.setSongInfo(mp3Info.getTitle(), mp3Info.getArtist());
-            musicPlay();
+            musicStart(mp3Info);
         }
     }
     @Subscribe(threadMode = ThreadMode.POSTING)

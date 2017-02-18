@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MinJieMusic</string>
+    <string name="app_name">敏捷音乐</string>
     <string name="title_activity_base">BaseActivity</string>
     <string name="listen">听</string>
     <string name="look">看</string>
@@ -26,4 +26,7 @@
     <string name="song_name">歌名</string>
     <string name="singer">歌手</string>
     <string name="singer_song_count">总数</string>
+    <string name="folder_fold">文件目录</string>
+    <string name="folder_name">文件名称</string>
+    <string name="folder">路径</string>
 </resources>

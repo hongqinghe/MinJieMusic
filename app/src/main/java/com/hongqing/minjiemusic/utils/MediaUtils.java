@@ -7,7 +7,9 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -31,8 +33,29 @@ public class MediaUtils {
 			.parse("content://media/external/audio/albumart");
     private static final String TAG = "MediaUtils";
 
+	public static String[] getMp3File(Context context,String title){
+		int count = 0;
 
-    /**
+
+		Cursor cursor = context.getContentResolver().query(
+				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+				new String[] { MediaStore.Audio.Media.DISPLAY_NAME},
+				MediaStore.Audio.Media.TITLE+"="+"\'"+title+"\'",null,
+				null);
+		String[] ids = null;
+		if (cursor != null) {
+			
+			ids = new String[cursor.getCount()];
+			for (int i = 0; i < cursor.getCount(); i++) {
+				cursor.moveToNext();
+				ids[i] = String.valueOf(cursor.getString(i));
+			}
+		}
+		cursor.close();
+		return ids;
+	}
+
+	/**
      * MP3总数
      * @param context
      * @return
@@ -86,6 +109,7 @@ public class MediaUtils {
                         .getColumnIndex(MediaStore.Audio.Media.DATA)); // 文件路径
                 int isMusic = cursor.getInt(cursor
                         .getColumnIndex(MediaStore.Audio.Media.IS_MUSIC)); // 是否为音乐
+
                 if (isMusic != 0) { // 只把音乐添加到集合当中
                     mp3Info.setMp3InfoId(id);
                     mp3Info.setTitle(title);
@@ -95,6 +119,7 @@ public class MediaUtils {
                     mp3Info.setDuration(duration);
                     mp3Info.setSize(size);
                     mp3Info.setUrl(url);
+
                 }
             }
         }
@@ -158,6 +183,8 @@ public class MediaUtils {
 					.getColumnIndex(MediaStore.Audio.Media.DATA)); // 文件路径
 			int isMusic = cursor.getInt(cursor
 					.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC)); // 是否为音乐
+			String folder=cursor.getString(
+					cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));//查询文件目录
 			if (isMusic != 0) { // 只把音乐添加到集合当中
 				mp3Info.setMp3InfoId(id);
 				mp3Info.setTitle(title);
@@ -167,6 +194,7 @@ public class MediaUtils {
 				mp3Info.setDuration(duration);
 				mp3Info.setSize(size);
 				mp3Info.setUrl(url);
+				mp3Info.setFolder(folder);
 				mp3Infos.add(mp3Info);
 			}
 		}
@@ -330,7 +358,7 @@ public class MediaUtils {
 		Cursor cursor = context.getContentResolver().query(
 				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
 				new String[] { MediaStore.Audio.Media.ALBUM},
-				MediaStore.Audio.Media.ARTIST_ID+"="+aa,null,
+				MediaStore.Audio.Media.ALBUM_ID+"="+aa,null,
 				null);
 		long[] ids = null;
 		if (cursor != null) {

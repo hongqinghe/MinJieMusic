@@ -38,10 +38,15 @@ public class SingerFragment extends BaseFragment {
     private void initView() {
         singer_listView = (ListView) view.findViewById(R.id.singer_listView);
         mp3InfoList= MediaUtils.getMp3Infos(getContext());
-        adapter=new Singer_listViewAdapter(getContext(),mp3InfoList);
+
         //添加头部标题
         View v = LayoutInflater.from(getContext()).inflate(R.layout.singer_head_listview, null);
         singer_listView.addHeaderView(v);
+        //添加尾部
+        View foot = LayoutInflater.from(getContext()).inflate(R.layout.album_foot_listview, null);
+        singer_listView.addFooterView(foot);
+
+        adapter=new Singer_listViewAdapter(getContext(),mp3InfoList,foot);
         singer_listView.setAdapter(adapter);
     }
 

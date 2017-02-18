@@ -51,10 +51,10 @@ public class SinglesFragment extends BaseFragment implements AdapterView.OnItemC
         listView_singles = (ListView) view.findViewById(R.id.listView_localSongs_singles);
         mp3InfoList = new ArrayList<>();
         mp3InfoList = MediaUtils.getMp3Infos(getContext());
-        for (Mp3Info mp3Info:mp3InfoList){
-            System.out.println(mp3Info.toString());
-        }
-        listViewAdapter = new Singles_listViewAdapter(getContext(), mp3InfoList);
+        //添加尾部
+        View foot = LayoutInflater.from(getContext()).inflate(R.layout.album_foot_listview, null);
+        listView_singles.addFooterView(foot);
+        listViewAdapter = new Singles_listViewAdapter(getContext(), mp3InfoList,foot);
         listView_singles.setAdapter(listViewAdapter);
         listView_singles.setOnItemClickListener(this);
     }

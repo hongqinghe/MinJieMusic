@@ -8,6 +8,6 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/singer_listView"
+        android:id="@+id/folder_listView"
         android:listSelector="@drawable/listview_item_selector"/>
 </LinearLayout>

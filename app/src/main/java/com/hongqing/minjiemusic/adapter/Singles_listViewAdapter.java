@@ -19,16 +19,18 @@ import java.util.List;
 public class Singles_listViewAdapter extends BaseAdapter {
     private Context context;
     private List<Mp3Info> mp3InfoList;
-
+     private View foot;
     public Singles_listViewAdapter(Context context) {
         this.context = context;
     }
 
-    public Singles_listViewAdapter(Context context, List<Mp3Info> mp3InfoList) {
+    public Singles_listViewAdapter(Context context, List<Mp3Info> mp3InfoList,View foot) {
         this.context = context;
         this.mp3InfoList = mp3InfoList;
+        this.foot=foot;
+        TextView tv_album_footView= (TextView) foot.findViewById(R.id.tv_album_footView);
+        tv_album_footView.setText(mp3InfoList.size()+"首歌");
     }
-
     @Override
     public int getCount() {
         return mp3InfoList.size();
