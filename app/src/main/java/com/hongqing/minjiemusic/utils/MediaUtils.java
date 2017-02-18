@@ -44,7 +44,7 @@ public class MediaUtils {
 				null);
 		String[] ids = null;
 		if (cursor != null) {
-			
+
 			ids = new String[cursor.getCount()];
 			for (int i = 0; i < cursor.getCount(); i++) {
 				cursor.moveToNext();

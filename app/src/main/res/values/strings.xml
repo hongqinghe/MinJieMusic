@@ -25,8 +25,12 @@
     <string name="play_in_order">顺序播放</string>
     <string name="song_name">歌名</string>
     <string name="singer">歌手</string>
+    <string name="net_lxb">流行榜</string>
+    <string name="net_gtb">港台榜</string>
+    <string name="net_ndb">内地榜</string>
     <string name="singer_song_count">总数</string>
     <string name="folder_fold">文件目录</string>
     <string name="folder_name">文件名称</string>
     <string name="folder">路径</string>
+    <string name="think_kugou">感谢【酷狗音乐】对音乐库的内容的支持，音乐版权均归酷狗音乐所有。</string>
 </resources>
