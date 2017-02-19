@@ -1,6 +1,7 @@
 package com.hongqing.minjiemusic;
 
 import android.Manifest;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -97,22 +98,31 @@ public class MainActivity extends BaseActivity  {
             isplaying = false;
         } else {
             if (mediaPlayer.isPlaying()) {  //判断是不是正在播放  ，如果正在播放则就释放 然后在进行播放
-                mediaPlayer.reset();
+
                 mediaPlayer.stop();
             }
+            mediaPlayer.reset();
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             try {
                 mediaPlayer.setDataSource(this, Uri.parse(mp3Info.getUrl()));
               //判断是网络播放的话要异步缓冲进行播放 ，且要设置监听事件
                 if (local_or_net== Constant.LOCAL_LIST){
                     mediaPlayer.prepare();
-                    mediaPlayer.start();
-                    mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+                    mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                         @Override
-                        public void onCompletion(MediaPlayer mediaPlayer) {
-                            musicNext();
+                        public void onPrepared(MediaPlayer mp) {
+                            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                                @Override
+                                public void onCompletion(MediaPlayer mediaPlayer) {
+
+                                    musicNext();
+                                }
+                            });
+                            mp.start();//开始播放
                         }
                     });
+//                    mediaPlayer.start();
                 }else  if (local_or_net== Constant.NET_LIST){
                     mediaPlayer.prepareAsync();
                     mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -147,6 +157,11 @@ public class MainActivity extends BaseActivity  {
             @Override
             public void setSimpleDrawerViewListener() {
                 //图片的点击事件
+//                Intent intent=new Intent(MainActivity.this,PlayActivity.class);
+//                startActivity(intent);
+                //参数 类型   播放集合    网络or本地  当前进度
+                EventBus.getDefault().post(new MessageEvent(MessageEventType.SHOW_PLAY_ACTIVITY
+                        ,mp3InfoList,index,local_or_net,mediaPlayer.getCurrentPosition()));
             }
             @Override
             public void setPlayListener() {
@@ -163,6 +178,14 @@ public class MainActivity extends BaseActivity  {
             @Override
             public void setMenuListListener() {
                 //菜单
+            }
+        });
+        mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+                //发生错误的时候调用
+                mediaPlayer.reset();
+                return false;
             }
         });
     }
@@ -230,7 +253,8 @@ public class MainActivity extends BaseActivity  {
             transaction.addToBackStack(null);//添加回退栈
             transaction.commit();
         }
-    }    @Subscribe
+    }
+    @Subscribe
     public void MessageSubscriberNdb(MessageEvent event){
         Log.i("MessageSubscriber",event.type+"");
         if (event.type== MessageEventType.SHOW_NDB_FRAGMENT) {

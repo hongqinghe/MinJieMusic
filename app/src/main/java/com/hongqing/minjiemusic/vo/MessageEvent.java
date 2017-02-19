@@ -24,4 +24,10 @@ public class MessageEvent {
         this.position = position;
         this.local_or_net=local_or_net;
     }
+    public MessageEvent(MessageEventType type, Object data, int position,int local_or_net,int current_progess) {
+        this.type = type;
+        this.data = data;
+        this.position = position;
+        this.local_or_net=local_or_net;
+    }
 }

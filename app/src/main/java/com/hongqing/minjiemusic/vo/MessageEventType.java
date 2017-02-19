@@ -10,7 +10,8 @@ public enum MessageEventType {
     BACK_MINE,    //返回主页面
     SHOW_NDB_FRAGMENT, //显示内地榜
     SHOW_GTB_FRAGMENT,   //显示港台榜
-    SHOW_LXB_FRAGMENT     //显示流行榜
+    SHOW_LXB_FRAGMENT,     //显示流行榜
+    SHOW_PLAY_ACTIVITY     //跳转到播放页
 }
 
 

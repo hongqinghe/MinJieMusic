@@ -33,4 +33,7 @@
     <string name="folder_name">文件名称</string>
     <string name="folder">路径</string>
     <string name="think_kugou">感谢【酷狗音乐】对音乐库的内容的支持，音乐版权均归酷狗音乐所有。</string>
+    <string name="current_progess">当前进度</string>
+    <string name="current_progress">当前进度</string>
+    <string name="duration_play">时长</string>
 </resources>
