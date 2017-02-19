@@ -12,6 +12,7 @@ import android.widget.ListView;
 
 import com.hongqing.minjiemusic.R;
 import com.hongqing.minjiemusic.adapter.Singles_listViewAdapter;
+import com.hongqing.minjiemusic.utils.Constant;
 import com.hongqing.minjiemusic.utils.MediaUtils;
 import com.hongqing.minjiemusic.vo.MessageEvent;
 import com.hongqing.minjiemusic.vo.MessageEventType;
@@ -30,7 +31,6 @@ import java.util.List;
 public class SinglesFragment extends BaseFragment implements AdapterView.OnItemClickListener, Serializable {
     private ListView listView_singles;
     private View view;
-    private static final String TAG = "AAAAAAAA";
     private List<Mp3Info> mp3InfoList;
     private Singles_listViewAdapter listViewAdapter;
 
@@ -63,7 +63,7 @@ public class SinglesFragment extends BaseFragment implements AdapterView.OnItemC
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        EventBus.getDefault().post(new MessageEvent(MessageEventType.PLAY_MUSIC, mp3InfoList, position));
+        EventBus.getDefault().post(new MessageEvent(MessageEventType.PLAY_MUSIC, mp3InfoList, position, Constant.LOCAL_LIST));
     }
 
 }

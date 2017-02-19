@@ -8,6 +8,7 @@ public class MessageEvent {
     public MessageEventType type;
     public Object data;
     public int position;
+    public int local_or_net;
     public MessageEvent(MessageEventType type) {
         this.type = type;
     }
@@ -16,10 +17,11 @@ public class MessageEvent {
         this.type = type;
         this.data = data;
     }
-
-    public MessageEvent(MessageEventType type, Object data, int position) {
+      //参数  Message的类型   数据  位置（从listView 中点击的位置 ）   本地音乐还是网络播放
+    public MessageEvent(MessageEventType type, Object data, int position,int local_or_net) {
         this.type = type;
         this.data = data;
         this.position = position;
+        this.local_or_net=local_or_net;
     }
 }

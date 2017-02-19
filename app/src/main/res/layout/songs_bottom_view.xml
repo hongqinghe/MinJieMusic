@@ -33,6 +33,11 @@
                 android:gravity="center_vertical"
                 android:maxLines="1"
                 android:text="歌名"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
                 android:textColor="@color/textColorWhite" />
 
             <LinearLayout

@@ -50,7 +50,8 @@ public class Constant {
     //失败标记
     public static final int FAILED = 2;
 
-
+      public   static  final   int LOCAL_LIST=0x3; //播放本地音乐
+      public   static  final   int NET_LIST=0x4;  //播放网络音乐
     public static final String DIR_LRC = "/mly_music/music/lrc";
 
     //音乐路径

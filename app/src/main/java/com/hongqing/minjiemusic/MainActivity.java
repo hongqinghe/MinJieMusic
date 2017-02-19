@@ -14,9 +14,13 @@ import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.hongqing.minjiemusic.fragment.GTBFragment;
+import com.hongqing.minjiemusic.fragment.LXBFragment;
 import com.hongqing.minjiemusic.fragment.LocalSongsFragment;
 import com.hongqing.minjiemusic.fragment.LookFragment;
 import com.hongqing.minjiemusic.fragment.MineFragment;
+import com.hongqing.minjiemusic.fragment.NDBFragment;
+import com.hongqing.minjiemusic.utils.Constant;
 import com.hongqing.minjiemusic.view.SongsBottom_View;
 import com.hongqing.minjiemusic.vo.MessageEvent;
 import com.hongqing.minjiemusic.vo.MessageEventType;
@@ -30,7 +34,7 @@ import org.xutils.x;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity  {
 
     private FragmentTransaction ft;
     private SongsBottom_View songBottom_view;
@@ -44,6 +48,7 @@ public class MainActivity extends BaseActivity {
     private MineFragment mineFragment;
     private LocalSongsFragment localSongsFragment;
     private ViewPager viewpager;
+    private int local_or_net;
 
     /**
      * 在onCreate中创建对象 ，要不在activity不可见的时候他会重新创建对象，
@@ -98,8 +103,32 @@ public class MainActivity extends BaseActivity {
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             try {
                 mediaPlayer.setDataSource(this, Uri.parse(mp3Info.getUrl()));
-                mediaPlayer.prepare();
-                mediaPlayer.start();
+              //判断是网络播放的话要异步缓冲进行播放 ，且要设置监听事件
+                if (local_or_net== Constant.LOCAL_LIST){
+                    mediaPlayer.prepare();
+                    mediaPlayer.start();
+                    mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer mediaPlayer) {
+                            musicNext();
+                        }
+                    });
+                }else  if (local_or_net== Constant.NET_LIST){
+                    mediaPlayer.prepareAsync();
+                    mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mp) {
+                            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                                @Override
+                                public void onCompletion(MediaPlayer mediaPlayer) {
+                                    musicNext();
+                                }
+                            });
+                            mp.start();//开始播放
+                        }
+                    });
+                }
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -119,7 +148,6 @@ public class MainActivity extends BaseActivity {
             public void setSimpleDrawerViewListener() {
                 //图片的点击事件
             }
-
             @Override
             public void setPlayListener() {
                 //播放
@@ -132,7 +160,6 @@ public class MainActivity extends BaseActivity {
                 //下一首
                musicNext();
             }
-
             @Override
             public void setMenuListListener() {
                 //菜单
@@ -148,7 +175,6 @@ public class MainActivity extends BaseActivity {
             isplaying=false;
             songBottom_view.setPlay_bottom(false);
         }else {
-            System.out.println(mp3Info.getTitle().toString()+"zheshi   snaonoafna");
             musicStart(mp3Info);
             songBottom_view.setPlay_bottom(true);
             isplaying=true;
@@ -165,16 +191,18 @@ public class MainActivity extends BaseActivity {
                 index = 0;//置为0循环播放
             }
             isNext = true;//每次点击的时候都置为TRUE
+            System.out.println(index+"================index-------");
             mp3Info = mp3InfoList.get(index);
             musicStart(mp3Info);
         }
 
     }
-    @Subscribe(threadMode = ThreadMode.POSTING)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void MessageSubscriber(MessageEvent event) {
         Log.i("MessageSubscriber", event.type + "");
         if (event.type == MessageEventType.PLAY_MUSIC) {
             index = event.position;
+            local_or_net = event.local_or_net;
             mp3InfoList = (ArrayList<Mp3Info>) event.data;
             mp3Info = mp3InfoList.get(index);
             songBottom_view.setSongInfo(mp3Info.getTitle(), mp3Info.getArtist());
@@ -190,14 +218,39 @@ public class MainActivity extends BaseActivity {
             transaction.commit();
         }
     }
+    //显示本地音乐
     @Subscribe
     public void MessageSubscriberLocal(MessageEvent event){
         Log.i("MessageSubscriber",event.type+"");
         if (event.type== MessageEventType.SHOW_LOCAL_SONGS) {
-            viewpager = (ViewPager) findViewById(R.id.viewPager_localSongs);
             FragmentManager  fragmentManager = getSupportFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.add(R.id.fragment_layout_main,new LocalSongsFragment());
+            transaction.hide(mineFragment);  //隐藏当前的Fragment
+            transaction.addToBackStack(null);//添加回退栈
+            transaction.commit();
+        }
+    }    @Subscribe
+    public void MessageSubscriberNdb(MessageEvent event){
+        Log.i("MessageSubscriber",event.type+"");
+        if (event.type== MessageEventType.SHOW_NDB_FRAGMENT) {
+            FragmentManager  fragmentManager = getSupportFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.add(R.id.fragment_layout_main,new NDBFragment());
+            transaction.hide(mineFragment);  //隐藏当前的Fragment
+            transaction.addToBackStack(null);//添加回退栈
+            transaction.commit();
+        } else    if (event.type== MessageEventType.SHOW_GTB_FRAGMENT) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.add(R.id.fragment_layout_main, new GTBFragment());
+            transaction.hide(mineFragment);  //隐藏当前的Fragment
+            transaction.addToBackStack(null);//添加回退栈
+            transaction.commit();
+        }else    if (event.type== MessageEventType.SHOW_LXB_FRAGMENT) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.add(R.id.fragment_layout_main, new LXBFragment());
             transaction.hide(mineFragment);  //隐藏当前的Fragment
             transaction.addToBackStack(null);//添加回退栈
             transaction.commit();

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageButton;
@@ -42,6 +43,12 @@ public class SongsBottom_View extends LinearLayout implements View.OnClickListen
     public SongsBottom_View(Context context) {
         super(context);
         initView();
+        //设置textView可以水平滚动
+//        songName_bottom.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+//        songName_bottom.setSingleLine();
+//        songName_bottom.setFocusableInTouchMode(true);
+//        songName_bottom.requestFocus();
+
         initListener();
     }
 

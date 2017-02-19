@@ -7,7 +7,10 @@ package com.hongqing.minjiemusic.vo;
 public enum MessageEventType {
     SHOW_LOCAL_SONGS,//显示我的本地音乐
     PLAY_MUSIC, //播放音乐
-    BACK_MINE    //返回主页面
+    BACK_MINE,    //返回主页面
+    SHOW_NDB_FRAGMENT, //显示内地榜
+    SHOW_GTB_FRAGMENT,   //显示港台榜
+    SHOW_LXB_FRAGMENT     //显示流行榜
 }
 
 

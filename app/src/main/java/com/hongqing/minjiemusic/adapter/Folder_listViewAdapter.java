@@ -46,7 +46,6 @@ public class Folder_listViewAdapter extends BaseAdapter {
              count = MediaUtils.getMp3File(context,mp3InfoList.get(i).getTitle());
              stringList.add(count[0]);
          }
-        System.out.println(count.length+"------------------------");
       TextView tv_album_footView= (TextView) foot.findViewById(R.id.tv_album_footView);
         tv_album_footView.setText(mp3InfoList.size()+"首歌");
     }

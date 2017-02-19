@@ -26,7 +26,7 @@
 
             app:title_textsize="15sp"
             />
-        <LinearLayout android:id="@+id/linearLayout_ndb"
+        <LinearLayout android:id="@+id/linearLayout_ndb_look"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
@@ -53,7 +53,7 @@
                 />
 
         </LinearLayout>
-        <LinearLayout android:id="@+id/linearLayout_gtb"
+        <LinearLayout android:id="@+id/linearLayout_gtb_look"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
@@ -79,7 +79,7 @@
                 android:textSize="24sp"
                 />
         </LinearLayout>
-        <LinearLayout android:id="@+id/linearLayout_lxb"
+        <LinearLayout android:id="@+id/linearLayout_lxb_look"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
