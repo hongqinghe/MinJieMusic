@@ -19,18 +19,15 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_base);
         startService(new Intent(this, MusicService.class));
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
     public void bindMusicService() {
-        System.out.println("在 activity中绑定服务  -----============");
-        bindService(new Intent(this, MusicService.class), connection, BIND_AUTO_CREATE);
+        if (!serviceBound) {
+            System.out.println("在 activity中绑定服务  -----============");
+            bindService(new Intent(this, MusicService.class), connection, BIND_AUTO_CREATE);
+            serviceBound=true;
+        }
 
     }
 
@@ -48,7 +45,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     private ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            System.out.println("返回实例服务被调用了");
+            System.out.println("ServiceConnection");
+            System.out.println("ServiceConnection===="+componentName+"======连接的name============");
 
             musicService = ((MusicService.MyBind) iBinder).getService();
             musicService.setMusicUpdataListener(new MusicService.MusicUpdateListener() {
@@ -59,13 +57,16 @@ public abstract class BaseActivity extends AppCompatActivity {
 
                 @Override
                 public void changeData(long currentPosition) {
+                    System.out.println("监听事键执行了");
                  change(currentPosition);
                 }
             });
-            serviceBound = true;
+
         }
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
+            System.out.println("onServiceDisconnected--------------");
+            musicService=null;
             serviceBound = false;
         }
     };
@@ -81,7 +82,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        musicService.stopSelf();
+//        musicService.stopSelf();
         super.onDestroy();
     }
 }

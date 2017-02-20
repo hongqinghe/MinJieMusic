@@ -56,19 +56,20 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 //这里注意要在服务创建的时候进行注册EventBus
 // 因为他只会执行一次服务不会多次创建，出现的问题就是没打开一个Activity的时候要进行绑定服务，
 // 如果每次在绑定的时候都进行注册EventBus 造成消息无法接受的现象
+        System.out.println("服务被创建");
         EventBus.getDefault().register(this);
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
         System.out.println("unbind服务");
-
         return super.onUnbind(intent);
     }
 
     @Override
     public boolean stopService(Intent name) {
         System.out.println("stop服务");
+        EventBus.getDefault().unregister(this);
         return super.stopService(name);
     }
     //对外提供数据，就要提供方法，外面调用方法拿到数据（这里将mp3List集合提供）
@@ -81,7 +82,6 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     @Override
     public IBinder onBind(Intent intent) {
         System.out.println("服务被绑定了");
-
         return new MyBind();
     }
      //注意这里的播放完成事件要写在prepared方法中
@@ -124,7 +124,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        System.out.println("onStartCommand");
+        System.out.println("onStartCommand被执行了");
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -198,7 +198,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
     @Override
     public void onDestroy() {
-        EventBus.getDefault().unregister(this);
+
         super.onDestroy();
     }
     private MusicUpdateListener musicUpdateListener;

@@ -78,12 +78,15 @@ public class MainActivity extends BaseActivity  {
 
     @Override
     protected void onResume() {
+
         super.onResume();
-       bindMusicService();
+        bindMusicService();
+        System.out.println("MainActivity==============onResume");
     }
 
     @Override
     protected void change(long currentPosition) {
+        System.out.println(musicService.getClass().toString()+"拿到service");
         songBottom_view.setSongInfo(musicService.getMp3InfoList().get((int) currentPosition).getTitle(),
                 musicService.getMp3InfoList().get((int) currentPosition).getArtist());
         if (musicService.isPlaying()) {
@@ -100,8 +103,9 @@ public class MainActivity extends BaseActivity  {
 
     @Override
     protected void onPause() {
-        super.onPause();
         unBindService();
+        super.onPause();
+        System.out.println("MainActivity==============onPause");
     }
 
     @Override
@@ -112,8 +116,8 @@ public class MainActivity extends BaseActivity  {
 
     @Override
     public void onStop() {
-        super.onStop();
         EventBus.getDefault().unregister(this);
+        super.onStop();
     }
     private void initListener() {
         songBottom_view.setBottomListener(new SongsBottom_View.BottomListener() {

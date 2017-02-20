@@ -15,7 +15,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class PlayViewPagerAdapter extends FragmentPagerAdapter {
     private Context context;
     private List<Fragment >  fragmentList;
-    private String titles[]=new String[]{"歌词","专辑"};
+    private String titles[]=new String[]{"专辑","歌词"};
 
     public PlayViewPagerAdapter(FragmentManager fm,List<Fragment> fragmentList) {
         super(fm);

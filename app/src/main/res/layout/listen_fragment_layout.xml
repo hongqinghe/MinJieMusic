@@ -16,7 +16,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/listen2Color"
+            android:background="@android:color/transparent"
             android:drawableTop="@drawable/mylove_icon"
             android:gravity="center"
             android:text="@string/MyLike"
@@ -27,7 +27,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/listen2Color"
+            android:background="@android:color/transparent"
             android:drawableTop="@drawable/songlist_icon"
             android:gravity="center"
             android:text="@string/song_list"
@@ -38,7 +38,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/listen2Color"
+            android:background="@android:color/transparent"
             android:drawableTop="@drawable/down_icon"
             android:gravity="center"
             android:text="@string/down"
@@ -49,7 +49,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/listen2Color"
+            android:background="@android:color/transparent"
             android:drawableTop="@drawable/recent_icon"
             android:gravity="center"
             android:text="@string/recent"
@@ -115,7 +115,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:layout_weight="1"
-            android:background="@color/white"
+            android:background="@android:color/transparent"
             android:drawableTop="@drawable/music_library_icon"
             android:text="@string/music_library" />
 
@@ -124,7 +124,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:layout_weight="1"
-            android:background="@color/white"
+            android:background="@android:color/transparent"
             android:drawableTop="@drawable/radio_icon"
             android:text="@string/radio" />
 
@@ -133,7 +133,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/white"
+            android:background="@android:color/transparent"
             android:drawableTop="@drawable/cool_group"
             android:text="@string/cool_group" />
 
