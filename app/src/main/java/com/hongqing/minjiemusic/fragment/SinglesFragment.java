@@ -38,6 +38,7 @@ public class SinglesFragment extends BaseFragment implements AdapterView.OnItemC
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.singles_fragment_layout, null);
+
         return view;
     }
 
@@ -54,11 +55,10 @@ public class SinglesFragment extends BaseFragment implements AdapterView.OnItemC
         //添加尾部
         View foot = LayoutInflater.from(getContext()).inflate(R.layout.album_foot_listview, null);
         listView_singles.addFooterView(foot);
-        listViewAdapter = new Singles_listViewAdapter(getContext(), mp3InfoList,foot);
+        listViewAdapter = new Singles_listViewAdapter(getContext(), mp3InfoList, foot);
         listView_singles.setAdapter(listViewAdapter);
         listView_singles.setOnItemClickListener(this);
     }
-
 
 
     @Override

@@ -82,10 +82,8 @@ public class Singer_listViewAdapter extends BaseAdapter {
         TextView tv_singer_singer=MyViewHolder.getView(contentView,R.id.tv_singer_singer,null);
         Mp3Info mp3Info=mp3InfoList.get(position);
          count=MediaUtils.getMp3CountSinger(context,stringList.get(position));
-//        MediaUtils.getArtwork(context,0,)
-        Bitmap bitmap=MediaUtils.getArtwork(context,art_idList.get(position),mp3Info.getAlbumId(),true,false);
-          //拿到了bitmap对象之后  将bitmap转换为uri
-        Uri uri = Uri.parse(MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, null, null));
+         //这里使用getAlbumPhoto 方法加载数据  这样速度比较快
+        Uri uri=MediaUtils.getAlbumPhoto(context,mp3Info.getAlbumId(),art_idList.get(position));
         sdv_singerPhoto.setImageURI(uri);
         tv_song_Count_singer.setText(count.length+"首");
         tv_singer_singer.setText(mp3Info.getArtist());

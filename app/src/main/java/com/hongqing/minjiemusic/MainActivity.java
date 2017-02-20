@@ -1,11 +1,14 @@
 package com.hongqing.minjiemusic;
 
 import android.Manifest;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -47,8 +50,6 @@ public class MainActivity extends BaseActivity  {
     private ArrayList<Mp3Info> mp3InfoList;
     private Mp3Info mp3Info;
     private MineFragment mineFragment;
-    private LocalSongsFragment localSongsFragment;
-    private ViewPager viewpager;
     private int local_or_net;
 
     /**
@@ -69,10 +70,40 @@ public class MainActivity extends BaseActivity  {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(R.id.fragment_layout_main,mineFragment);
         transaction.commit();
-        mediaPlayer = new MediaPlayer();
         songBottom_view = (SongsBottom_View) findViewById(R.id.songBottom_view);
+
         initListener();
+
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+       bindMusicService();
+    }
+
+    @Override
+    protected void change(long currentPosition) {
+        songBottom_view.setSongInfo(musicService.getMp3InfoList().get((int) currentPosition).getTitle(),
+                musicService.getMp3InfoList().get((int) currentPosition).getArtist());
+        if (musicService.isPlaying()) {
+            songBottom_view.setPlay_bottom(true);
+        }else {
+            songBottom_view.setPlay_bottom(false);
+        }
+    }
+
+    @Override
+    protected void update(long progress) {
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unBindService();
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -84,154 +115,34 @@ public class MainActivity extends BaseActivity  {
         super.onStop();
         EventBus.getDefault().unregister(this);
     }
-
-    //播放音乐
-    private void musicStart(Mp3Info mp3Info) {
-        if (ispasue) {
-            if (isNext){
-                ispasue = false;
-                isNext = false;
-                mediaPlayer.reset();
-                musicStart(mp3Info);
-            }
-            mediaPlayer.start();
-            isplaying = false;
-        } else {
-            if (mediaPlayer.isPlaying()) {  //判断是不是正在播放  ，如果正在播放则就释放 然后在进行播放
-
-                mediaPlayer.stop();
-            }
-            mediaPlayer.reset();
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            try {
-                mediaPlayer.setDataSource(this, Uri.parse(mp3Info.getUrl()));
-              //判断是网络播放的话要异步缓冲进行播放 ，且要设置监听事件
-                if (local_or_net== Constant.LOCAL_LIST){
-                    mediaPlayer.prepare();
-
-                    mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                        @Override
-                        public void onPrepared(MediaPlayer mp) {
-                            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                                @Override
-                                public void onCompletion(MediaPlayer mediaPlayer) {
-
-                                    musicNext();
-                                }
-                            });
-                            mp.start();//开始播放
-                        }
-                    });
-//                    mediaPlayer.start();
-                }else  if (local_or_net== Constant.NET_LIST){
-                    mediaPlayer.prepareAsync();
-                    mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                        @Override
-                        public void onPrepared(MediaPlayer mp) {
-                            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                                @Override
-                                public void onCompletion(MediaPlayer mediaPlayer) {
-                                    musicNext();
-                                }
-                            });
-                            mp.start();//开始播放
-                        }
-                    });
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            songBottom_view.setSongInfo(mp3Info.getTitle(), mp3Info.getArtist());
-            isplaying=true;
-            ispasue=false;
-            isNext=false;
-            songBottom_view.setPlay_bottom(true);
-
-        }
-    }
-
-
     private void initListener() {
         songBottom_view.setBottomListener(new SongsBottom_View.BottomListener() {
             @Override
             public void setSimpleDrawerViewListener() {
                 //图片的点击事件
-//                Intent intent=new Intent(MainActivity.this,PlayActivity.class);
-//                startActivity(intent);
-                //参数 类型   播放集合    网络or本地  当前进度
-                EventBus.getDefault().post(new MessageEvent(MessageEventType.SHOW_PLAY_ACTIVITY
-                        ,mp3InfoList,index,local_or_net,mediaPlayer.getCurrentPosition()));
+                Intent intent=new Intent(MainActivity.this,PlayActivity.class);
+                startActivity(intent);
             }
             @Override
             public void setPlayListener() {
                 //播放
-                if (mp3Info!=null){
-                     musicPlay();
-                }
+          if (musicService.getMp3InfoList()!=null) {
+              System.out.println("点击了播放按钮");
+              musicService.musicPlay();
+          }
             }
             @Override
             public void setNextListener() {
                 //下一首
-               musicNext();
+                musicService.musicNext();
             }
             @Override
             public void setMenuListListener() {
                 //菜单
             }
         });
-        mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-            @Override
-            public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
-                //发生错误的时候调用
-                mediaPlayer.reset();
-                return false;
-            }
-        });
     }
- //点击播放按钮
-    private void musicPlay() {
-        if (isplaying){
-            mediaPlayer.pause();
-            ispasue=true;
-            isNext=true;
-            isplaying=false;
-            songBottom_view.setPlay_bottom(false);
-        }else {
-            musicStart(mp3Info);
-            songBottom_view.setPlay_bottom(true);
-            isplaying=true;
-            isNext=false;
-            ispasue=false;
-        }
-    }
-    private void musicNext() {
-        //判断不为空的时候进行传递
-        if (mp3Info != null) {
-            if (index + 1 < mp3InfoList.size()) {
-                index += 1;
-            } else {
-                index = 0;//置为0循环播放
-            }
-            isNext = true;//每次点击的时候都置为TRUE
-            System.out.println(index+"================index-------");
-            mp3Info = mp3InfoList.get(index);
-            musicStart(mp3Info);
-        }
 
-    }
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void MessageSubscriber(MessageEvent event) {
-        Log.i("MessageSubscriber", event.type + "");
-        if (event.type == MessageEventType.PLAY_MUSIC) {
-            index = event.position;
-            local_or_net = event.local_or_net;
-            mp3InfoList = (ArrayList<Mp3Info>) event.data;
-            mp3Info = mp3InfoList.get(index);
-            songBottom_view.setSongInfo(mp3Info.getTitle(), mp3Info.getArtist());
-            musicStart(mp3Info);
-        }
-    }
     @Subscribe(threadMode = ThreadMode.POSTING)
     public void MessageSunsriberBack(MessageEvent event){
         if (event.type==MessageEventType.BACK_MINE){
@@ -252,6 +163,7 @@ public class MainActivity extends BaseActivity  {
             transaction.hide(mineFragment);  //隐藏当前的Fragment
             transaction.addToBackStack(null);//添加回退栈
             transaction.commit();
+
         }
     }
     @Subscribe

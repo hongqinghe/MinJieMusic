@@ -25,23 +25,30 @@ public class PlayActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
         initView();
-
-    }
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
+    protected void onResume() {
+        super.onResume();
+        bindMusicService();
     }
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void MessageSubscriberLocal(MessageEvent event){
+
+    @Override
+    protected void change(long currentPosition) {
 
     }
+
+    @Override
+    protected void update(long progress) {
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unBindService();
+    }
+
     private void initView() {
         tabLayout = (TabLayout) findViewById(R.id.play_tab);
         viewPager = (ViewPager) findViewById(R.id.viewpager_play);

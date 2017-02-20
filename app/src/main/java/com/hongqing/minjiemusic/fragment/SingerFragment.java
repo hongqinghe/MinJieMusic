@@ -31,8 +31,14 @@ public class SingerFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.singer_fragment_layout, null);
-        initView();
+
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initView();
     }
 
     private void initView() {

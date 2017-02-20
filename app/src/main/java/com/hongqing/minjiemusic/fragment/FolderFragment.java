@@ -30,9 +30,16 @@ public class FolderFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.folder_fragment_layout,null);
-        initView();
+
         return view;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initView();
+    }
+
     private void initView() {
         folder_listView = (ListView) view.findViewById(R.id.folder_listView);
         mp3InfoList= MediaUtils.getMp3Infos(getContext());

@@ -31,16 +31,16 @@ public class MediaUtils {
 	// 获取专辑封面的Uri
 	private static final Uri albumArtUri = Uri
 			.parse("content://media/external/audio/albumart");
-    private static final String TAG = "MediaUtils";
+	private static final String TAG = "MediaUtils";
 
-	public static String[] getMp3File(Context context,String title){
+	public static String[] getMp3File(Context context, String title) {
 		int count = 0;
 
 
 		Cursor cursor = context.getContentResolver().query(
 				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-				new String[] { MediaStore.Audio.Media.DISPLAY_NAME},
-				MediaStore.Audio.Media.TITLE+"="+"\'"+title+"\'",null,
+				new String[]{MediaStore.Audio.Media.DISPLAY_NAME},
+				MediaStore.Audio.Media.TITLE + "=" + "\'" + title + "\'", null,
 				null);
 		String[] ids = null;
 		if (cursor != null) {
@@ -56,23 +56,25 @@ public class MediaUtils {
 	}
 
 	/**
-     * MP3总数
-     * @param context
-     * @return
-     */
-    public static int getMp3Count(Context context){
-        int count = 0;
-        Cursor cursor = context.getContentResolver().query(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                new String[] { MediaStore.Audio.Media._ID },
-                MediaStore.Audio.Media.DURATION + ">=180000", null,
-                MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
-        if (cursor != null) {
-            count = cursor.getCount();
-        }
-        cursor.close();
-        return count;
-    }
+	 * MP3总数
+	 *
+	 * @param context
+	 * @return
+	 */
+	public static int getMp3Count(Context context) {
+		int count = 0;
+		Cursor cursor = context.getContentResolver().query(
+				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+				new String[]{MediaStore.Audio.Media._ID},
+				MediaStore.Audio.Media.DURATION + ">=180000", null,
+				MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+		if (cursor != null) {
+			count = cursor.getCount();
+		}
+		cursor.close();
+		return count;
+	}
+
 	/**
 	 * 根据歌曲id查询歌曲信息
 	 *
@@ -88,41 +90,41 @@ public class MediaUtils {
 				MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
 
 		Mp3Info mp3Info = null;
-        if(cursor!=null) {
-            if (cursor.moveToNext()) {
-                mp3Info = new Mp3Info();
-                long id = cursor.getLong(cursor
-                        .getColumnIndex(MediaStore.Audio.Media._ID)); // 音乐id
-                String title = cursor.getString((cursor
-                        .getColumnIndex(MediaStore.Audio.Media.TITLE))); // 音乐标题
-                String artist = cursor.getString(cursor
-                        .getColumnIndex(MediaStore.Audio.Media.ARTIST)); // 艺术家
-                String album = cursor.getString(cursor
-                        .getColumnIndex(MediaStore.Audio.Media.ALBUM)); // 专辑
-                long albumId = cursor.getInt(cursor
-                        .getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
-                long duration = cursor.getLong(cursor
-                        .getColumnIndex(MediaStore.Audio.Media.DURATION)); // 时长
-                long size = cursor.getLong(cursor
-                        .getColumnIndex(MediaStore.Audio.Media.SIZE)); // 文件大小
-                String url = cursor.getString(cursor
-                        .getColumnIndex(MediaStore.Audio.Media.DATA)); // 文件路径
-                int isMusic = cursor.getInt(cursor
-                        .getColumnIndex(MediaStore.Audio.Media.IS_MUSIC)); // 是否为音乐
+		if (cursor != null) {
+			if (cursor.moveToNext()) {
+				mp3Info = new Mp3Info();
+				long id = cursor.getLong(cursor
+						.getColumnIndex(MediaStore.Audio.Media._ID)); // 音乐id
+				String title = cursor.getString((cursor
+						.getColumnIndex(MediaStore.Audio.Media.TITLE))); // 音乐标题
+				String artist = cursor.getString(cursor
+						.getColumnIndex(MediaStore.Audio.Media.ARTIST)); // 艺术家
+				String album = cursor.getString(cursor
+						.getColumnIndex(MediaStore.Audio.Media.ALBUM)); // 专辑
+				long albumId = cursor.getInt(cursor
+						.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
+				long duration = cursor.getLong(cursor
+						.getColumnIndex(MediaStore.Audio.Media.DURATION)); // 时长
+				long size = cursor.getLong(cursor
+						.getColumnIndex(MediaStore.Audio.Media.SIZE)); // 文件大小
+				String url = cursor.getString(cursor
+						.getColumnIndex(MediaStore.Audio.Media.DATA)); // 文件路径
+				int isMusic = cursor.getInt(cursor
+						.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC)); // 是否为音乐
 
-                if (isMusic != 0) { // 只把音乐添加到集合当中
-                    mp3Info.setMp3InfoId(id);
-                    mp3Info.setTitle(title);
-                    mp3Info.setArtist(artist);
-                    mp3Info.setAlbum(album);
-                    mp3Info.setAlbumId(albumId);
-                    mp3Info.setDuration(duration);
-                    mp3Info.setSize(size);
-                    mp3Info.setUrl(url);
+				if (isMusic != 0) { // 只把音乐添加到集合当中
+					mp3Info.setMp3InfoId(id);
+					mp3Info.setTitle(title);
+					mp3Info.setArtist(artist);
+					mp3Info.setAlbum(album);
+					mp3Info.setAlbumId(albumId);
+					mp3Info.setDuration(duration);
+					mp3Info.setSize(size);
+					mp3Info.setUrl(url);
 
-                }
-            }
-        }
+				}
+			}
+		}
 		cursor.close();
 		return mp3Info;
 	}
@@ -135,7 +137,7 @@ public class MediaUtils {
 	public static long[] getMp3InfoIds(Context context) {
 		Cursor cursor = context.getContentResolver().query(
 				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-				new String[] { MediaStore.Audio.Media._ID },
+				new String[]{MediaStore.Audio.Media._ID},
 				MediaStore.Audio.Media.DURATION + ">=180000", null,
 				MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
 		long[] ids = null;
@@ -183,7 +185,7 @@ public class MediaUtils {
 					.getColumnIndex(MediaStore.Audio.Media.DATA)); // 文件路径
 			int isMusic = cursor.getInt(cursor
 					.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC)); // 是否为音乐
-			String folder=cursor.getString(
+			String folder = cursor.getString(
 					cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));//查询文件目录
 			if (isMusic != 0) { // 只把音乐添加到集合当中
 				mp3Info.setMp3InfoId(id);
@@ -211,7 +213,7 @@ public class MediaUtils {
 	public static List<HashMap<String, String>> getMusicMaps(
 			List<Mp3Info> mp3Infos) {
 		List<HashMap<String, String>> mp3list = new ArrayList<HashMap<String, String>>();
-		for (Iterator iterator = mp3Infos.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = mp3Infos.iterator(); iterator.hasNext(); ) {
 			Mp3Info mp3Info = (Mp3Info) iterator.next();
 			HashMap<String, String> map = new HashMap<String, String>();
 			map.put("title", mp3Info.getTitle());
@@ -290,6 +292,7 @@ public class MediaUtils {
 			if (albumid < 0) {
 				Uri uri = Uri.parse("content://media/external/audio/media/"
 						+ songid + "/albumart");
+
 				ParcelFileDescriptor pfd = context.getContentResolver()
 						.openFileDescriptor(uri, "r");
 				if (pfd != null) {
@@ -320,17 +323,36 @@ public class MediaUtils {
 			bm = BitmapFactory.decodeFileDescriptor(fd, null, options);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-            Log.i(TAG, "getArtworkFromFile: "+e);
-        }
+			Log.i(TAG, "getArtworkFromFile: " + e);
+		}
 		return bm;
 	}
 
-	/**
-	 * 查询歌手对应的歌曲总数
-	 * @param context
-	 * @param aa
-	 * @return
-	 */
+	//查询专辑的照片
+   public static Uri getAlbumPhoto(Context  context,long albumId,long songId){
+	   Uri uri=null;
+	   if (albumId < 0 && songId < 0) {
+		   throw new IllegalArgumentException(
+				   "Must specify an album or a song id");
+	   }
+	   if (albumId < 0) {
+	   uri = Uri.parse("content://media/external/audio/media/"
+				   + songId + "/albumart");
+		   return uri;
+	   }else {
+		   uri = ContentUris.withAppendedId(albumArtUri, albumId);
+		   return uri;
+	   }
+   }
+
+
+
+				/**
+                 * 查询歌手对应的歌曲总数
+                 * @param context
+                 * @param aa
+                 * @return
+                 */
 	public static long[] getMp3CountSinger(Context context,String aa) {
 		Cursor cursor = context.getContentResolver().query(
 				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,

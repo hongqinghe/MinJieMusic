@@ -81,9 +81,10 @@ public class Album_listViewAdapter extends BaseAdapter {
         final Mp3Info mp3Info=mp3InfoList.get(position);
          count=MediaUtils.getMp3CountAlbum(context, Long.parseLong(stringList.get(position)));
         //根据iD查出对应的专辑照片
-        Bitmap bitmap=MediaUtils.getArtwork(context,mp3Info.getMp3InfoId(),mp3Info.getAlbumId(),true,false);
+//        Bitmap bitmap=MediaUtils.getArtwork(context,mp3Info.getMp3InfoId(),mp3Info.getAlbumId(),true,false);
+        Uri uri=MediaUtils.getAlbumPhoto(context,mp3Info.getAlbumId(),mp3Info.getMp3InfoId());
           //拿到了bitmap对象之后  将bitmap转换为uri
-        Uri uri = Uri.parse(MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, null, null));
+//        Uri uri = Uri.parse(MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, null, null));
         if (count.length>=1){
             sdv_singerPhoto.setImageURI(uri);
             tv_song_count_album.setText(count.length+"张");
