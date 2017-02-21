@@ -1,16 +1,17 @@
 package com.hongqing.minjiemusic;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.hongqing.minjiemusic.adapter.PlayViewPagerAdapter;
 
+import com.hongqing.minjiemusic.fragment.LyricsFragment;
 import com.hongqing.minjiemusic.fragment.PlayAlbumFragment;
 import com.hongqing.minjiemusic.utils.MediaUtils;
 import com.hongqing.minjiemusic.vo.Mp3Info;
@@ -30,24 +31,36 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
     private ImageView play;
     private ImageView next_play;
     private ImageView menu_play;
+    private TextView songName_play;
+    private TextView singer_play;
+    private PlayAlbumFragment playAlbumFragment;
+    private LyricsFragment lyricsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
         initView();
-        System.out.println("创建playActivity");
     }
 
     @Override
     protected void change(long currentPosition) {
-        System.out.println(musicService.getClass().toString() + "在playActivity中拿到service =========");
-//        Mp3Info mp3Info=musicService.getMp3InfoList().get((int) currentPosition);
-//        System.out.println(musicService.getMp3InfoList().toString());
-//
-//        albumFragment.setSimpleDraweeView(
-//        MediaUtils.getAlbumPhoto(this,mp3Info.getAlbumId(),mp3Info.getMp3InfoId()));
+        List<Mp3Info> mp3InfoList = musicService.getMp3InfoList();
+        if (mp3InfoList != null) {
+            Mp3Info mp3Info = mp3InfoList.get(musicService.getIndex());
+            System.out.println(mp3InfoList.toString());
+            Uri uri = MediaUtils.getAlbumPhoto(this, mp3Info.getAlbumId(), mp3Info.getMp3InfoId());
+           playAlbumFragment.setAlbumPhoto(uri);
 
+            songName_play.setText(mp3Info.getTitle());
+            singer_play.setText(mp3Info.getArtist());
+            if (musicService.isPlaying()) {
+                play.setImageResource(R.mipmap.play_play);
+            }else {
+                play.setImageResource(R.mipmap.pasue_play);
+            }
+
+        }
     }
 
     @Override
@@ -72,6 +85,8 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void initView() {
+        songName_play = (TextView) findViewById(R.id.songName_play);
+        singer_play = (TextView) findViewById(R.id.singer_play);
         tabLayout = (TabLayout) findViewById(R.id.play_tab);
         viewPager = (ViewPager) findViewById(R.id.viewpager_play);
         back_title_icon = (ImageView) findViewById(R.id.back_title_icon);
@@ -80,15 +95,17 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
         play = (ImageView) findViewById(R.id.play);
         next_play = (ImageView) findViewById(R.id.next_play);
         menu_play = (ImageView) findViewById(R.id.menu_play);
+
         initListener();
         List<Fragment> fragmentList = new ArrayList<>();
-        fragmentList.add(new PlayAlbumFragment());
-        fragmentList.add(new PlayAlbumFragment());
+        playAlbumFragment = new PlayAlbumFragment();
+        lyricsFragment = new LyricsFragment();
+        fragmentList.add(playAlbumFragment);
+        fragmentList.add(lyricsFragment);
         adapter = new PlayViewPagerAdapter(getSupportFragmentManager(), fragmentList);
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
 
-        albumFragment = new PlayAlbumFragment();
     }
 
     private void initListener() {
@@ -103,24 +120,24 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.back_title_icon:
                 //退出Activity
                 finish();
                 break;
-                case R.id.radio_play:
+            case R.id.radio_play:
 
                 break;
-                case R.id.prev_play:
-
+            case R.id.prev_play:
+                musicService.musicPrev();
                 break;
-                case R.id.play:
-
+            case R.id.play:
+                musicService.musicPlay();
                 break;
-                case R.id.next_play:
-
+            case R.id.next_play:
+                musicService.musicNext();
                 break;
-                case R.id.menu_play:
+            case R.id.menu_play:
 
                 break;
 

@@ -49,6 +49,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             System.out.println("ServiceConnection===="+componentName+"======连接的name============");
 
             musicService = ((MusicService.MyBind) iBinder).getService();
+            //这是设置点击时的监听事件
             musicService.setMusicUpdataListener(new MusicService.MusicUpdateListener() {
                 @Override
                 public void updateProgess(long progress) {
@@ -61,7 +62,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                  change(currentPosition);
                 }
             });
-
+             //初始化时候的点击事件
+            change(musicService.getIndex());
         }
         @Override
         public void onServiceDisconnected(ComponentName componentName) {

@@ -14,21 +14,22 @@ import com.hongqing.minjiemusic.R;
  * Created by 贺红清 on 2017/2/20.
  */
 
-public class PlayAlbumFragment extends  BaseFragment {
+public class PlayAlbumFragment extends BaseFragment {
 
     private View view;
     private SimpleDraweeView simpleDraweeView;
 
     @Nullable
     @Override
-
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.playalbum_fragment_layout, null);
-        simpleDraweeView = (SimpleDraweeView) view.findViewById(R.id.sdv_singerPhoto);
+        view = inflater.inflate(R.layout.lyrics_fragment_layout, container, false);
+        simpleDraweeView = (SimpleDraweeView) view.findViewById(R.id.sdv_singerPhoto_lry);
+//        simpleDraweeView.setImageResource(R.mipmap.background_play);
+
         return view;
+
     }
-    public  void setSimpleDraweeView(Uri uri){
+    public void setAlbumPhoto(Uri uri){
         simpleDraweeView.setImageURI(uri);
     }
-
 }

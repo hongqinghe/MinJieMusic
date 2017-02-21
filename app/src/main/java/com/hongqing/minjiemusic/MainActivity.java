@@ -78,15 +78,15 @@ public class MainActivity extends BaseActivity  {
 
     @Override
     protected void onResume() {
-
         super.onResume();
         bindMusicService();
-        System.out.println("MainActivity==============onResume");
     }
 
     @Override
     protected void change(long currentPosition) {
-        System.out.println(musicService.getClass().toString()+"拿到service");
+
+        //通过接口更新状态的方法  先进行非空判断，避免初始化第一次启动异常
+        if (musicService.getMp3InfoList() != null) {
         songBottom_view.setSongInfo(musicService.getMp3InfoList().get((int) currentPosition).getTitle(),
                 musicService.getMp3InfoList().get((int) currentPosition).getArtist());
         if (musicService.isPlaying()) {
@@ -94,18 +94,19 @@ public class MainActivity extends BaseActivity  {
         }else {
             songBottom_view.setPlay_bottom(false);
         }
+
+        }
     }
 
     @Override
     protected void update(long progress) {
-
+   //更新进度条的方法
     }
 
     @Override
     protected void onPause() {
         unBindService();
         super.onPause();
-        System.out.println("MainActivity==============onPause");
     }
 
     @Override
