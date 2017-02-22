@@ -11,6 +11,8 @@
     fresco:fadeDuration="300"
     android:layout_gravity="center_horizontal"
     fresco:actualImageScaleType="focusCrop"
+    fresco:placeholderImageScaleType="fitCenter"
+    fresco:failureImageScaleType="centerInside"
     fresco:roundAsCircle="true"
     fresco:placeholderImage="@mipmap/album_icon"/>
 </LinearLayout>

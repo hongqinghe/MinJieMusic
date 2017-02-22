@@ -11,15 +11,21 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
+import org.xutils.x;
+
 public abstract class BaseActivity extends AppCompatActivity {
 
     public MusicService musicService;
     private boolean serviceBound = false;//定义一个标记 判断服务是否已绑定
+    private BaseApplication application;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         startService(new Intent(this, MusicService.class));
+
+        //初始化加载数据库
+        application = (BaseApplication) getApplication();
     }
 
     public void bindMusicService() {

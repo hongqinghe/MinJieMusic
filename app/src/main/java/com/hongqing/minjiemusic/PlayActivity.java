@@ -13,6 +13,7 @@ import com.hongqing.minjiemusic.adapter.PlayViewPagerAdapter;
 
 import com.hongqing.minjiemusic.fragment.LyricsFragment;
 import com.hongqing.minjiemusic.fragment.PlayAlbumFragment;
+import com.hongqing.minjiemusic.utils.Constant;
 import com.hongqing.minjiemusic.utils.MediaUtils;
 import com.hongqing.minjiemusic.vo.Mp3Info;
 
@@ -40,20 +41,27 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
+        playAlbumFragment = new PlayAlbumFragment();
+        lyricsFragment = new LyricsFragment();
         initView();
+
     }
 
     @Override
     protected void change(long currentPosition) {
         List<Mp3Info> mp3InfoList = musicService.getMp3InfoList();
         if (mp3InfoList != null) {
-            Mp3Info mp3Info = mp3InfoList.get(musicService.getIndex());
-            System.out.println(mp3InfoList.toString());
-            Uri uri = MediaUtils.getAlbumPhoto(this, mp3Info.getAlbumId(), mp3Info.getMp3InfoId());
-           playAlbumFragment.setAlbumPhoto(uri);
-
+            Mp3Info mp3Info = mp3InfoList.get((int) currentPosition);
+            if (musicService.getLocal_or_net()== Constant.LOCAL_LIST){
+                Uri uri = MediaUtils.getAlbumPhoto(this, mp3Info.getAlbumId(),mp3Info.getMp3InfoId());
+                playAlbumFragment.setAlbumPhoto(uri);
+            }else {
+                //暂时网络的uri为空
+                playAlbumFragment.setAlbumPhoto(null);
+            }
             songName_play.setText(mp3Info.getTitle());
             singer_play.setText(mp3Info.getArtist());
+
             if (musicService.isPlaying()) {
                 play.setImageResource(R.mipmap.play_play);
             }else {
@@ -98,8 +106,8 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
 
         initListener();
         List<Fragment> fragmentList = new ArrayList<>();
-        playAlbumFragment = new PlayAlbumFragment();
-        lyricsFragment = new LyricsFragment();
+//        playAlbumFragment = new PlayAlbumFragment();
+//        lyricsFragment = new LyricsFragment();
         fragmentList.add(playAlbumFragment);
         fragmentList.add(lyricsFragment);
         adapter = new PlayViewPagerAdapter(getSupportFragmentManager(), fragmentList);

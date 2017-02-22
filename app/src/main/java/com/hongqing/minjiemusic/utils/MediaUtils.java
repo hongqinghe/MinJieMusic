@@ -338,9 +338,11 @@ public class MediaUtils {
 	   if (albumId < 0) {
 	   uri = Uri.parse("content://media/external/audio/media/"
 				   + songId + "/albumart");
+		   System.out.println("thisi is  === 测试uri");
 		   return uri;
 	   }else {
 		   uri = ContentUris.withAppendedId(albumArtUri, albumId);
+		   System.out.println("thisi is  === 添加的uri");
 		   return uri;
 	   }
    }

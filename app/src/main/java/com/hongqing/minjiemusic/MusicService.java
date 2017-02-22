@@ -48,7 +48,16 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         }
         return false;
     }
-//提供播放的下标
+
+    public int getLocal_or_net() {
+        return local_or_net;
+    }
+
+    public void setLocal_or_net(int local_or_net) {
+        this.local_or_net = local_or_net;
+    }
+
+    //提供播放的下标
     public int getIndex() {
         return index;
     }
