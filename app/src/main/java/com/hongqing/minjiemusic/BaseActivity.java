@@ -8,22 +8,29 @@ import android.os.Environment;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import org.xutils.x;
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener {
 
     public MusicService musicService;
     private boolean serviceBound = false;//定义一个标记 判断服务是否已绑定
-    private BaseApplication application;
+    public BaseApplication application;
+    private SlidingMenu menu;
+    private LinearLayout line_exit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         startService(new Intent(this, MusicService.class));
-
+        initSlidingmenu();
         //初始化加载数据库
         application = (BaseApplication) getApplication();
     }
@@ -51,9 +58,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     private ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            System.out.println("ServiceConnection");
-            System.out.println("ServiceConnection===="+componentName+"======连接的name============");
-
             musicService = ((MusicService.MyBind) iBinder).getService();
             //这是设置点击时的监听事件
             musicService.setMusicUpdataListener(new MusicService.MusicUpdateListener() {
@@ -87,11 +91,45 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
     }
+    private void initSlidingmenu() {
+        menu = new SlidingMenu(this);
+        menu.setMode(SlidingMenu.LEFT);
+        //设置触摸屏幕的样式    设置边缘模式滑动打开menu(整个屏幕，边缘，不能通过手势启动三个参数)
+        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+        menu.setBehindWidth(500);//相对屏幕的偏移量
+        menu.setBehindScrollScale(1);//设置出来的样式   1平移出现  0  代表下方出现
+        menu.setFadeDegree(0.5f);//设置渐出值
+        menu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);//设置出来时 的样式有基于window和content
+        menu.setMenu(R.layout.slidingmenu);
+        line_exit = (LinearLayout) findViewById(R.id.line_exit);
+        line_exit.setOnClickListener(this);
+    }
 
     @Override
     protected void onDestroy() {
 //        musicService.stopSelf();
         super.onDestroy();
+    }
+ //重写menu按钮
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode==KeyEvent.KEYCODE_MENU){
+                 menu.toggle();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onClick(View view) {
+   switch (view.getId()){
+       case R.id.line_exit:
+           //退出整个Activity
+           toast("退出");
+
+           Intent  intent=new Intent(MusicService.ACTION_CLOSE);
+           startService(intent);
+           break;
+   }
     }
 }
 

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.hongqing.minjiemusic.R;
 import com.hongqing.minjiemusic.adapter.MyViewPagerAdapter;
@@ -36,6 +37,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     private int[] tabBackground = {Color.WHITE};
    private PagerSlidingTabStrip strip;
     private ImageView title_search;
+    private LinearLayout line_exit;
 
     @Override
     public void onResume() {
@@ -50,7 +52,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.mine_fragment_layout, null);
         initView();
-        initSlidingmenu();
         viewPager.setCurrentItem(0);
         return view;
     }
@@ -125,17 +126,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     }
 
     //设置侧滑菜单
-    private void initSlidingmenu() {
-        menu = new SlidingMenu(getContext());
-        menu.setMode(SlidingMenu.LEFT);
-        //设置触摸屏幕的样式    设置边缘模式滑动打开menu(整个屏幕，边缘，不能通过手势启动三个参数)
-        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-        menu.setBehindWidth(500);//相对屏幕的偏移量
-        menu.setBehindScrollScale(1);//设置出来的样式   1平移出现  0  代表下方出现
-        menu.setFadeDegree(0.5f);//设置渐出值
-        menu.attachToActivity(getActivity(), SlidingMenu.SLIDING_WINDOW);//设置出来时 的样式有基于window和content
-        menu.setMenu(R.layout.slidingmenu);
-    }
 
     @Override
     public void onClick(View view) {

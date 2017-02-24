@@ -42,10 +42,7 @@ public class MainActivity extends BaseActivity  {
 
     private FragmentTransaction ft;
     private SongsBottom_View songBottom_view;
-    private boolean ispasue = false;//是否是暂停播放
-    private boolean isplaying = false;//是否正在播放
     public static MediaPlayer mediaPlayer;
-    private int index = 0;//定义下标来控制播放哪一首歌
     private boolean isNext = true;//用来判断是不是暂停状态下单价下一首
     private ArrayList<Mp3Info> mp3InfoList;
     private Mp3Info mp3Info;

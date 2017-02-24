@@ -2,6 +2,7 @@ package com.hongqing.minjiemusic;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -19,6 +20,7 @@ import static android.content.ContentValues.TAG;
 public class BaseApplication extends Application {
     public DbManager dbManager;
     public static Context context;
+    public SharedPreferences sharedPreferences;
 
     @Override
     public void onCreate() {
@@ -26,6 +28,9 @@ public class BaseApplication extends Application {
         Fresco.initialize(this);//frasco的初始化
 
         x.Ext.init(this);//xutils的初始化
+
+
+
         DbManager.DaoConfig config = new DbManager.DaoConfig()
                 .setDbName(Constant.DB_NAME)
                 .setDbVersion(Constant.VERSION)
@@ -42,7 +47,7 @@ public class BaseApplication extends Application {
                         Log.i(TAG, "onUpgrade: "+oldVersion);
                     }
                 });
-       x.getDb(config);
+      dbManager= x.getDb(config);
         context = getApplicationContext();
 
     }

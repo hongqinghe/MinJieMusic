@@ -2,7 +2,9 @@ package com.hongqing.minjiemusic;
 
 import android.app.Service;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -14,6 +16,7 @@ import android.util.Log;
 
 import com.hongqing.minjiemusic.fragment.MineFragment;
 import com.hongqing.minjiemusic.utils.Constant;
+import com.hongqing.minjiemusic.utils.MediaUtils;
 import com.hongqing.minjiemusic.vo.MessageEvent;
 import com.hongqing.minjiemusic.vo.MessageEventType;
 import com.hongqing.minjiemusic.vo.Mp3Info;
@@ -42,12 +45,16 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     private ArrayList<Mp3Info> mp3InfoList;
     private Mp3Info mp3Info;
     private int local_or_net;
+    public static final String ACTION_CLOSE="com.hongqing.mingjiemusic.CLOSE";
+
     private int currentPosition;//当前播放的进度
     public static   final int ORDER_PLAY=0x5;
     public static   final int RADOM_PLAY=0x6;
     public static   final int SINGLE_PLAY=0x7;
     private int MODE_PLAY;
    private ExecutorService  executorService= Executors.newSingleThreadExecutor();//单线程池用于更新播放进度
+    private SharedPreferences sharedPreferences;
+
     //判断音乐是否正在播放 （也可以通过service直接调用Mediaplay对象来判断）
     public boolean isPlaying() {
         if (mediaPlayer != null) {
@@ -68,6 +75,14 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     @Override
     public void onCreate() {
         super.onCreate();
+        sharedPreferences = getSharedPreferences(Constant.SP_NAME, Context.MODE_PRIVATE);
+        //拿出退出时的数据
+        local_or_net=sharedPreferences.getInt("LOCAL_OR_NET",Constant.LOCAL_LIST);
+        index=sharedPreferences.getInt("INDEX",0);
+        // 如果为空则设置默认播放模式为order_play
+        setMODE_PLAY(sharedPreferences.getInt("MODE",ORDER_PLAY));
+        mp3InfoList= MediaUtils.getMp3Infos(this);
+        mp3Info=mp3InfoList.get(index);
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setOnPreparedListener(this);
         mediaPlayer.setOnErrorListener(this);
@@ -75,8 +90,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 // 因为他只会执行一次服务不会多次创建，出现的问题就是没打开一个Activity的时候要进行绑定服务，
 // 如果每次在绑定的时候都进行注册EventBus 造成消息无法接受的现象
         EventBus.getDefault().register(this);
-        //设置默认播放模式
-        setMODE_PLAY(ORDER_PLAY);
+
     }
 
     @Override
@@ -189,6 +203,13 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        String action = intent.getAction();
+        System.out.println(action+"==============================");
+        if (ACTION_CLOSE.equals(action)){
+          mediaPlayer.stop();
+            mediaPlayer.release();
+            this.stopSelf();
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -247,7 +268,6 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
                 mediaPlayer.reset();
                 musicStart(mp3Info);
             }
-
             mediaPlayer.start();
             isplaying = true;
             musicUpdateListener.changeData(index);
@@ -256,8 +276,6 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
                 mediaPlayer.stop();
             }
             mediaPlayer.reset();
-            System.out.println("正真播放");
-
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             try {
                 mediaPlayer.setDataSource(this, Uri.parse(mp3Info.getUrl()));
@@ -279,6 +297,25 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
     @Override
     public void onDestroy() {
+        //保存状态
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putInt("LOCAL_OR_NET",Constant.LOCAL_LIST);
+        edit.putInt("MODE",MODE_PLAY);
+        edit.putInt("INDEX",index);
+        edit.commit();
+
+        if (executorService!=null&&executorService.isShutdown()){
+            executorService.isShutdown();
+            executorService=null;
+        }
+        isplaying=false;
+        isNext=false;
+        ispasue=false;
+        mediaPlayer.release();
+        mediaPlayer=null;
+        mp3Info=null;
+        mp3InfoList=null;
+        musicUpdateListener=null;
 
         super.onDestroy();
     }
