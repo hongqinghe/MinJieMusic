@@ -35,7 +35,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     private boolean ispasue = false;//是否是暂停播放
     private boolean isplaying = false;//是否正在播放
     private int index = 0;//定义下标来控制播放哪一首歌
-    private boolean isNext = true;//用来判断是不是暂停状态下单价下一首
+    private boolean isNext = false;//用来判断是不是暂停状态下单价下一首
     private ArrayList<Mp3Info> mp3InfoList;
     private Mp3Info mp3Info;
     private int local_or_net;
@@ -142,16 +142,19 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     //点击播放按钮
     public void musicPlay() {
         if (isplaying) {
+            System.out.println("is playing 下  暂停");
             mediaPlayer.pause();
             musicUpdateListener.changeData(index);//暂停播放的时候也要改变状态
+            mediaPlayer.setOnCompletionListener(null);
             ispasue = true;
             isNext = true;
-            mediaPlayer.setOnCompletionListener(null);
             isplaying = false;
         } else {
+            System.out.println("is playing 下  播放");
+
+            isNext = false;
             musicStart(mp3Info);
             isplaying = true;
-            isNext = false;
             ispasue = false;
         }
     }
@@ -164,6 +167,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
                int size = mp3InfoList.size()-1;
                index= size;
            }
+           isNext=true;
            musicStart(mp3InfoList.get(index));
        }
 
@@ -187,18 +191,24 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     public void musicStart(Mp3Info mp3Info) {
         if (ispasue) {
             if (isNext) {
+                System.out.println("is next 下  播放");
                 ispasue = false;
                 isNext = false;
                 mediaPlayer.reset();
                 musicStart(mp3Info);
             }
+            System.out.println("is pasue 下  播放");
+
             mediaPlayer.start();
-            isplaying = false;
+            isplaying = true;
+            musicUpdateListener.changeData(index);
         } else {
             if (mediaPlayer.isPlaying()) {  //判断是不是正在播放  ，如果正在播放则就释放 然后在进行播放
                 mediaPlayer.stop();
             }
             mediaPlayer.reset();
+            System.out.println("正真播放");
+
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             try {
                 mediaPlayer.setDataSource(this, Uri.parse(mp3Info.getUrl()));
