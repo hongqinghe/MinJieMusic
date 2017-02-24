@@ -25,6 +25,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by 贺红清 on 2017/2/20.
@@ -40,7 +43,11 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     private Mp3Info mp3Info;
     private int local_or_net;
     private int currentPosition;//当前播放的进度
-
+    public static   final int ORDER_PLAY=0x5;
+    public static   final int RADOM_PLAY=0x6;
+    public static   final int SINGLE_PLAY=0x7;
+    private int MODE_PLAY;
+   private ExecutorService  executorService= Executors.newSingleThreadExecutor();//单线程池用于更新播放进度
     //判断音乐是否正在播放 （也可以通过service直接调用Mediaplay对象来判断）
     public boolean isPlaying() {
         if (mediaPlayer != null) {
@@ -51,10 +58,6 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
     public int getLocal_or_net() {
         return local_or_net;
-    }
-
-    public void setLocal_or_net(int local_or_net) {
-        this.local_or_net = local_or_net;
     }
 
     //提供播放的下标
@@ -71,8 +74,9 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 //这里注意要在服务创建的时候进行注册EventBus
 // 因为他只会执行一次服务不会多次创建，出现的问题就是没打开一个Activity的时候要进行绑定服务，
 // 如果每次在绑定的时候都进行注册EventBus 造成消息无法接受的现象
-        System.out.println("服务被创建");
         EventBus.getDefault().register(this);
+        //设置默认播放模式
+        setMODE_PLAY(ORDER_PLAY);
     }
 
     @Override
@@ -102,6 +106,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
         mediaPlayer.start();
+        if (musicUpdateListener!=null)
         musicUpdateListener.changeData(index); //当前播放的是哪个位置 通过位置查找集合中的数据
     }
     @Override
@@ -112,10 +117,58 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     //这里设置完成事件的时候会出现一个异常  就是在播放网络音乐的时候，由于网络状态的状态是异步缓冲的所以就会造成一个
     //播放异常，点击播放的时候，他会跳到下一首，不会从当前歌曲进行播放所以需要在暂停的逻辑里面将
     //  mediaPlayer.setOnCompletionListener(null);置为空，这样就不会出现播放异常
+
+    public int getMODE_PLAY() {
+        return MODE_PLAY;
+    }
+
+    public void setMODE_PLAY(int MODE_PLAY) {
+        this.MODE_PLAY = MODE_PLAY;
+    }
+
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
+        switch (MODE_PLAY){
+            case ORDER_PLAY:  //顺序播放
                 musicNext();
+                break;
+            case SINGLE_PLAY:  //单曲循环
+                musicStart(mp3InfoList.get(index));
+                break;
+            case  RADOM_PLAY:   //随机播放
+                Random random=new Random();
+                musicStart(mp3InfoList.get(random.nextInt(mp3InfoList.size())));
+                break;
+        }
     }
+    public int  getCurrentPosition() {
+        if (mediaPlayer != null)
+            return mediaPlayer.getCurrentPosition();
+        else return 0;
+    }
+  //设置seekBar的进度
+    public void seekBar(int  currentPosition){
+        mediaPlayer.seekTo(currentPosition);
+    }
+    private class Update implements Runnable {
+        public Update (){
+          isplaying=true;
+        }
+        @Override
+        public void run() {
+            while (isplaying){
+                    if (musicUpdateListener!=null){
+                        musicUpdateListener.updateProgess(getCurrentPosition());
+                    }
+                try {
+                    Thread.sleep(800);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+    //绑定服务
     class MyBind extends Binder {
         MusicService getService() {
             return MusicService.this;
@@ -142,25 +195,22 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     //点击播放按钮
     public void musicPlay() {
         if (isplaying) {
-            System.out.println("is playing 下  暂停");
             mediaPlayer.pause();
+            isplaying = false;
             musicUpdateListener.changeData(index);//暂停播放的时候也要改变状态
             mediaPlayer.setOnCompletionListener(null);
             ispasue = true;
             isNext = true;
-            isplaying = false;
         } else {
-            System.out.println("is playing 下  播放");
-
             isNext = false;
             musicStart(mp3Info);
+
             isplaying = true;
             ispasue = false;
         }
     }
    public void musicPrev(){
        if (mp3Info!=null){
-           System.out.println(index+"================index");
            if (index!=0&&index-1>=0){
                index--;
            }else {
@@ -175,13 +225,14 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     public void musicNext() {
         //判断不为空的时候进行传递
         if (mp3Info != null) {
+
+            //设置播放模式
             if (index + 1 < mp3InfoList.size()) {
                 index += 1;
             } else {
                 index = 0;//置为0循环播放
             }
             isNext = true;//每次点击的时候都置为TRUE
-            System.out.println(index + "================index-------");
             mp3Info = mp3InfoList.get(index);
             musicStart(mp3Info);
         }
@@ -191,13 +242,11 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     public void musicStart(Mp3Info mp3Info) {
         if (ispasue) {
             if (isNext) {
-                System.out.println("is next 下  播放");
                 ispasue = false;
                 isNext = false;
                 mediaPlayer.reset();
                 musicStart(mp3Info);
             }
-            System.out.println("is pasue 下  播放");
 
             mediaPlayer.start();
             isplaying = true;
@@ -221,13 +270,11 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            currentPosition = mediaPlayer.getCurrentPosition();
-            musicUpdateListener.updateProgess(currentPosition);//拿到当前的播放进度
             isplaying = true;
             ispasue = false;
         }
+        executorService.execute(new Update());
         mediaPlayer.setOnCompletionListener(this);
-
     }
 
     @Override
@@ -245,4 +292,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         void updateProgess(long progress);
         void changeData(long   currentPosition);
     }
+
+
+
 }

@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".BaseActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".PlayActivity" />
+        <activity android:name=".PlayActivity" android:screenOrientation="portrait" />
 
         <service
             android:name=".MusicService"

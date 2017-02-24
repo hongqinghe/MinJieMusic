@@ -91,11 +91,14 @@
         android:orientation="horizontal"
         android:layout_marginTop="15dp">
         <TextView
-            android:layout_width="25dp"
-            android:gravity="center"
+            android:textColor="@color/textColorWhite"
+            android:textSize="17dp"
+            android:id="@+id/play_current_progress"
+            android:layout_width="30dp"
             android:layout_height="match_parent"
             android:text="@string/current_progress"/>
         <SeekBar
+            android:id="@+id/seekBar"
             android:layout_width="0dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
@@ -103,8 +106,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
         <TextView
+            android:textColor="@color/textColorWhite"
+            android:textSize="17dp"
+            android:id="@+id/duration_play"
             android:layout_width="25dp"
-            android:gravity="center"
+            android:gravity="center_horizontal"
             android:layout_height="match_parent"
             android:text="@string/duration_play"/>
     </LinearLayout>
@@ -116,12 +122,13 @@
         android:paddingTop="4dp"
         android:layout_marginBottom="15dp">
       <ImageView
-          android:id="@+id/radio_play"
+
+          android:id="@+id/mode_play"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_weight="1"
           android:layout_gravity="center"
-          android:src="@mipmap/radio_play"/>
+          android:src="@mipmap/order_play"/>
           <ImageView
               android:id="@+id/prev_play"
           android:layout_width="0dp"
