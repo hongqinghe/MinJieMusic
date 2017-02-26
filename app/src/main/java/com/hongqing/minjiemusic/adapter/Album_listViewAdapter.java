@@ -38,7 +38,6 @@ public class Album_listViewAdapter extends BaseAdapter {
         this.mp3InfoList = mp3InfoList;
          this.foot=foot;
         stringList=new ArrayList<>();
-        System.out.println(mp3InfoList.size()+"总数     --------");
         for (int i=0;i<mp3InfoList.size();i++){
             long id=mp3InfoList.get(i).getAlbumId();
             long id2=mp3InfoList.get(i+=1).getAlbumId();

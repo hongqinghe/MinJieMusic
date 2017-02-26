@@ -54,6 +54,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     private int MODE_PLAY;
    private ExecutorService  executorService= Executors.newSingleThreadExecutor();//单线程池用于更新播放进度
     private SharedPreferences sharedPreferences;
+    private BaseApplication application;
 
     //判断音乐是否正在播放 （也可以通过service直接调用Mediaplay对象来判断）
     public boolean isPlaying() {
@@ -75,15 +76,20 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     @Override
     public void onCreate() {
         super.onCreate();
-        sharedPreferences = getSharedPreferences(Constant.SP_NAME, Context.MODE_PRIVATE);
+
         //拿出退出时的数据
-        local_or_net=sharedPreferences.getInt("LOCAL_OR_NET",Constant.LOCAL_LIST);
-        index=sharedPreferences.getInt("INDEX",0);
+        application = (BaseApplication) getApplication();
+        local_or_net= application.sharedPreferences.getInt("LOCAL_OR_NET",Constant.LOCAL_LIST);
+        index= application.sharedPreferences.getInt("INDEX",0);
+        currentPosition= application.sharedPreferences.getInt("CURRENT_PROGRESS",0);
+        System.out.println(currentPosition+"bbbbbbbbbbbbbbbbbb");
         // 如果为空则设置默认播放模式为order_play
-        setMODE_PLAY(sharedPreferences.getInt("MODE",ORDER_PLAY));
+        setMODE_PLAY(application.sharedPreferences.getInt("MODE",ORDER_PLAY));
         mp3InfoList= MediaUtils.getMp3Infos(this);
         mp3Info=mp3InfoList.get(index);
+
         mediaPlayer = new MediaPlayer();
+        mediaPlayer.seekTo(currentPosition);//将原先的进度保存下来  并设值给Mediaplay
         mediaPlayer.setOnPreparedListener(this);
         mediaPlayer.setOnErrorListener(this);
 //这里注意要在服务创建的时候进行注册EventBus
@@ -95,13 +101,11 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
     @Override
     public boolean onUnbind(Intent intent) {
-        System.out.println("unbind服务");
         return super.onUnbind(intent);
     }
 
     @Override
     public boolean stopService(Intent name) {
-        System.out.println("stop服务");
         EventBus.getDefault().unregister(this);
         return super.stopService(name);
     }
@@ -156,9 +160,10 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         }
     }
     public int  getCurrentPosition() {
-        if (mediaPlayer != null)
-            return mediaPlayer.getCurrentPosition();
-        else return 0;
+        if (mediaPlayer != null){
+            return mediaPlayer.getCurrentPosition();}
+        else {
+            return 0;}
     }
   //设置seekBar的进度
     public void seekBar(int  currentPosition){
@@ -203,13 +208,6 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        String action = intent.getAction();
-        System.out.println(action+"==============================");
-        if (ACTION_CLOSE.equals(action)){
-          mediaPlayer.stop();
-            mediaPlayer.release();
-            this.stopSelf();
-        }
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -298,11 +296,12 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     @Override
     public void onDestroy() {
         //保存状态
-        SharedPreferences.Editor edit = sharedPreferences.edit();
-        edit.putInt("LOCAL_OR_NET",Constant.LOCAL_LIST);
+        SharedPreferences.Editor edit = application.sharedPreferences.edit();
+        System.out.println(getCurrentPosition()+"======ccccc====c");
+        edit.putInt("CURRENT_PROGRESS",getCurrentPosition());
         edit.putInt("MODE",MODE_PLAY);
         edit.putInt("INDEX",index);
-        edit.commit();
+        edit.apply();
 
         if (executorService!=null&&executorService.isShutdown()){
             executorService.isShutdown();

@@ -36,4 +36,5 @@
     <string name="current_progess">当前进度</string>
     <string name="current_progress">当前进度</string>
     <string name="duration_play">时长</string>
+    <string name="load_lrc">正在加载歌词中</string>
 </resources>

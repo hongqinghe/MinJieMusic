@@ -7,6 +7,7 @@ import android.os.Message;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -18,8 +19,12 @@ import com.hongqing.minjiemusic.fragment.LyricsFragment;
 import com.hongqing.minjiemusic.fragment.PlayAlbumFragment;
 import com.hongqing.minjiemusic.utils.Constant;
 import com.hongqing.minjiemusic.utils.MediaUtils;
+import com.hongqing.minjiemusic.view.view.LrcView;
+import com.hongqing.minjiemusic.vo.MessageEvent;
+import com.hongqing.minjiemusic.vo.MessageEventType;
 import com.hongqing.minjiemusic.vo.Mp3Info;
 
+import org.greenrobot.eventbus.EventBus;
 import org.xutils.ex.DbException;
 import org.xutils.x;
 
@@ -50,15 +55,15 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
     private ImageView mode_play;
     private ImageView iv_love;
     private Mp3Info mp3Info;
+    private BaseApplication application;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
-        playAlbumFragment = new PlayAlbumFragment();
-        lyricsFragment = new LyricsFragment();
+
         initView();
-        BaseApplication application = (BaseApplication) getApplication();
+        application = (BaseApplication) getApplication();
 
     }
 
@@ -74,12 +79,11 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
                 //暂时网络的uri为空
                 playAlbumFragment.setAlbumPhoto(null);
             }
-            System.out.println(mp3Info.getDuration()+"-==========duration");
             duration.setText(MediaUtils.formatTime( mp3Info.getDuration())+"");
             current_progress.setText(MediaUtils.formatTime(musicService.getCurrentPosition())+"");
             seekBar.setMax((int) mp3Info.getDuration());
-            setModePlay();
-            setLoveRes();
+            setModePlay();//设置播放模式
+            setLoveRes(mp3Info);//加载是否为收藏音乐
             songName_play.setText(mp3Info.getTitle());
             singer_play.setText(mp3Info.getArtist());
             if (musicService.isPlaying()) {
@@ -87,7 +91,12 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
             }else {
                 play.setImageResource(R.mipmap.pasue_play);
             }
+            //提供歌名和专辑 查找单词
 
+       if (lyricsFragment!=null) {
+           lyricsFragment.setInfo(mp3Info.getTitle(), mp3Info.getArtist());
+           lyricsFragment.load();
+       }
         }
     }
 
@@ -114,6 +123,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
             Message  message=Message.obtain();
             message.what=UPDATA_PROGRESS;
             message.obj=progress;
+//            myHandler.obtainMessage(UPDATA_LRC_TIME,progress)
             myHandler.sendMessage(message);
         }
     }
@@ -147,7 +157,8 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
            PlayActivity playActivity=weakReference.get();
            switch (msg.what){
                case   UPDATA_PROGRESS:
-                   System.out.println(MediaUtils.formatTime((Long) msg.obj)+"打印时间为");
+//                   System.out.println(MediaUtils.formatTime((Long) msg.obj)+"打印时间为");
+                   playActivity.lyricsFragment.seekLrcToTime((Long) msg.obj);
                     playActivity.current_progress.setText(MediaUtils.formatTime((Long) msg.obj)+"");
                    break;
            }
@@ -188,8 +199,8 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
         duration = (TextView) findViewById(R.id.duration_play);
         initListener();
         List<Fragment> fragmentList = new ArrayList<>();
-//        playAlbumFragment = new PlayAlbumFragment();
-//        lyricsFragment = new LyricsFragment();
+        playAlbumFragment = new PlayAlbumFragment();
+        lyricsFragment =LyricsFragment.getIntance();
         fragmentList.add(playAlbumFragment);
         fragmentList.add(lyricsFragment);
         adapter = new PlayViewPagerAdapter(getSupportFragmentManager(), fragmentList);
@@ -243,41 +254,45 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
     }
    //点击喜欢按钮  先判断是不是喜欢 如果喜欢状态，就取消  ，否则直接保存
     private void setLoveMusic() {
-//        Mp3Info mp3Info = musicService.getMp3InfoList().get(musicService.getIndex());
+        Mp3Info mp3Info = musicService.getMp3InfoList().get(musicService.getIndex());
+        System.out.println(mp3Info.toString()+"this  is ");
         try {
-            Mp3Info mp3InfoId = application.dbManager.selector(Mp3Info.class).
-                    where("mp3InfoId", "=", mp3Info.getMp3InfoId()).findFirst();
-//            System.out.println(mp3InfoId.toString()+"aaaaaaaaaaaaaaaaaa");
-
-            if (mp3InfoId!=null){
-
-                int like = mp3InfoId.getIsLike() == 0 ? 1 : 0;
-                System.out.println("1被执行"+like);
-                mp3InfoId.setIsLike(like);
-                application.dbManager.update(mp3InfoId);
+            System.out.println("========================");
+            Mp3Info likeMp3Info = application.dbManager.selector(Mp3Info.class)
+                    .where("mp3InfoId","=",mp3Info.getMp3InfoId()).findFirst();
+            System.out.println(likeMp3Info+"aaaaaaaaaasdfadsfsdf");
+            if(likeMp3Info!=null){
+                int like = likeMp3Info.getIsLike()==0?1:0;
+                likeMp3Info.setIsLike(like);
+                application.dbManager.update(likeMp3Info);
             }else{
                 mp3Info.setIsLike(1);
-                System.out.println(mp3Info.getIsLike()+"aaa11111111111111111111111111");
-                System.out.println("2被执行");
+                System.out.println(mp3Info.toString()+"this  is4444444 ");
                 application.dbManager.save(mp3Info);
-                System.out.println(application.dbManager.findAll(Mp3Info.class)+"=============");
+
+                System.out.println("===========assssss=============");
             }
         } catch (DbException e) {
             e.printStackTrace();
         }
-        setLoveRes();
+//        EventBus.getDefault().postSticky(new MessageEvent(
+//                MessageEventType.QUERY_MY_LIKE_MUSIC_COUNT));
+
+        setLoveRes(mp3Info);
     }
 
-    private void setLoveRes() {
+    private void setLoveRes(Mp3Info mp3Info) {
         //查询并设置是否为喜欢歌曲
             try {
-                Mp3Info likeMp3Info =application .dbManager.selector(Mp3Info.class)
-                        .where("mp3InfoId","=",mp3Info.getMp3InfoId()).findFirst();
-//                System.out.println(likeMp3Info.toString()+"sssssssssssssssss");
+                System.out.println(mp3Info.getMp3InfoId()+"id");
+                Mp3Info likeMp3Info = application.dbManager.selector(Mp3Info.class).
+                        where("mp3InfoId", "=", mp3Info.getMp3InfoId()).findFirst();
                 if (likeMp3Info != null && likeMp3Info.getIsLike()==1) {
+                    System.out.println(likeMp3Info.toString()+"sssssssssssssssss");
                     iv_love.setImageResource(R.mipmap.love_play);
                 }else{
                     iv_love.setImageResource(R.mipmap.love_play_normal);
+                    System.out.println("sssssssyyyyyyssssssssss");
                 }
 
             } catch (DbException e) {

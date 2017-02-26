@@ -4,15 +4,8 @@
     android:gravity="center"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/sdv_singerPhoto_lry"
-        android:layout_width="280dp"
-        android:layout_height="280dp"
-        android:layout_gravity="center_horizontal"
-        fresco:actualImageScaleType="focusCrop"
-        fresco:placeholderImageScaleType="fitCenter"
-        fresco:fadeDuration="300"
-        fresco:placeholderImage="@mipmap/album_icon"
-        fresco:roundAsCircle="true" />
+    <com.hongqing.minjiemusic.view.view.LrcView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/lrcView"/>
 </LinearLayout>

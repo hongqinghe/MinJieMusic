@@ -1,11 +1,13 @@
 package com.hongqing.minjiemusic;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.media.MediaScannerConnection;
 import android.os.Environment;
 import android.os.IBinder;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -14,9 +16,16 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.hongqing.minjiemusic.vo.MessageEvent;
+import com.hongqing.minjiemusic.vo.MessageEventType;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.xutils.x;
+
+import java.util.ArrayList;
 
 public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -25,14 +34,16 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     public BaseApplication application;
     private SlidingMenu menu;
     private LinearLayout line_exit;
-
+    private static ArrayList<Activity> list = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         startService(new Intent(this, MusicService.class));
+        //记录没打开的Activity
+        list.add(this);
         initSlidingmenu();
         //初始化加载数据库
-        application = (BaseApplication) getApplication();
+//        application = (BaseApplication) getApplication();
     }
 
     public void bindMusicService() {
@@ -89,7 +100,9 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     @Override
     protected void onStop() {
+        EventBus.getDefault().unregister(this);
         super.onStop();
+
     }
     private void initSlidingmenu() {
         menu = new SlidingMenu(this);
@@ -104,10 +117,20 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         line_exit = (LinearLayout) findViewById(R.id.line_exit);
         line_exit.setOnClickListener(this);
     }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void exit(MessageEvent event){
+       if (event.type==MessageEventType.EXIT_APP){
 
+           stopService(new Intent(this,MusicService.class));//退出service
+           //将每个Activity关闭
+           for (int i=0;i<list.size();i++){
+               list.get(i).finish();
+           }
+           list = null;
+       }
+    }
     @Override
     protected void onDestroy() {
-//        musicService.stopSelf();
         super.onDestroy();
     }
  //重写menu按钮
@@ -120,14 +143,20 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+
+    @Override
     public void onClick(View view) {
    switch (view.getId()){
        case R.id.line_exit:
            //退出整个Activity
            toast("退出");
+           EventBus.getDefault().post(new MessageEvent(MessageEventType.EXIT_APP));
 
-           Intent  intent=new Intent(MusicService.ACTION_CLOSE);
-           startService(intent);
            break;
    }
     }

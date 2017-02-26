@@ -29,7 +29,7 @@ public class BaseApplication extends Application {
 
         x.Ext.init(this);//xutils的初始化
 
-
+        sharedPreferences = getSharedPreferences(Constant.SP_NAME, Context.MODE_PRIVATE);
 
         DbManager.DaoConfig config = new DbManager.DaoConfig()
                 .setDbName(Constant.DB_NAME)
@@ -47,7 +47,7 @@ public class BaseApplication extends Application {
                         Log.i(TAG, "onUpgrade: "+oldVersion);
                     }
                 });
-      dbManager= x.getDb(config);
+         dbManager= x.getDb(config);
         context = getApplicationContext();
 
     }
