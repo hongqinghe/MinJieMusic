@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,6 +37,10 @@ public class ListenFragment extends BaseFragment implements View.OnClickListener
     private int mHiddenViewMeasuredHeight;
     private LinearLayout line_localSons;
     private TextView tv_song_count;
+    private Button bu_song_list;
+    private Button bu_down;
+    private Button bu_love;
+    private Button bu_recent;
 
     @Override
     public void onResume() {
@@ -59,6 +64,12 @@ public class ListenFragment extends BaseFragment implements View.OnClickListener
         line_show_hide = (LinearLayout) view.findViewById(R.id.line_show_hide);
         line_localSons = (LinearLayout) view.findViewById(R.id.line_localSongs);
         tv_song_count = (TextView) view.findViewById(R.id.tv_song_Count);
+
+        bu_song_list = (Button) view.findViewById(R.id.bu_song_list);
+        bu_down = (Button) view.findViewById(R.id.bu_down);
+        bu_love = (Button) view.findViewById(R.id.bu_love);
+        bu_recent = (Button) view.findViewById(R.id.bu_recent);
+
         tv_song_count.setText(MediaUtils.getMp3Count(getContext())+"首");
         initListener();
     }
@@ -66,6 +77,10 @@ public class ListenFragment extends BaseFragment implements View.OnClickListener
     private void initListener() {
         ib_tool_next.setOnClickListener(this);
         line_localSons.setOnClickListener(this);
+        bu_song_list.setOnClickListener(this);
+        bu_down.setOnClickListener(this);
+        bu_love.setOnClickListener(this);
+        bu_recent.setOnClickListener(this);
     }
 
     @Override
@@ -77,6 +92,22 @@ public class ListenFragment extends BaseFragment implements View.OnClickListener
             case R.id.line_localSongs:
                 //打开本地音乐
                 EventBus.getDefault().post(new MessageEvent(MessageEventType.SHOW_LOCAL_SONGS));
+                break;
+            case R.id.bu_song_list:
+                //歌单
+                EventBus.getDefault().post(new MessageEvent(MessageEventType.SHOW_SONG_List));
+                break;
+            case R.id.bu_down:
+                //下载
+                EventBus.getDefault().post(new MessageEvent(MessageEventType.SHOW_DOWNMANAGER));
+                break;
+            case R.id.bu_love:
+                //收藏
+                EventBus.getDefault().post(new MessageEvent(MessageEventType.SHOW_LOVE));
+                break;
+            case R.id.bu_recent:
+                 //最近
+                EventBus.getDefault().post(new MessageEvent(MessageEventType.SHOW_RECENT));
                 break;
         }
     }

@@ -18,6 +18,7 @@ import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.hongqing.minjiemusic.fragment.Down_Fragment;
 import com.hongqing.minjiemusic.fragment.GTBFragment;
 import com.hongqing.minjiemusic.fragment.LXBFragment;
 import com.hongqing.minjiemusic.fragment.LocalSongsFragment;
@@ -62,6 +63,7 @@ public class MainActivity extends BaseActivity  {
         //添加6.0权限
         ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE
         ,Manifest.permission.READ_EXTERNAL_STORAGE},1);
+
         mineFragment =new MineFragment();
         FragmentManager  fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -152,6 +154,47 @@ public class MainActivity extends BaseActivity  {
             transaction.commit();
         }
     }
+    //显示歌单
+    @Subscribe(threadMode = ThreadMode.POSTING)
+    public void show_song_list(MessageEvent event){
+        if (event.type==MessageEventType.SHOW_SONG_List){
+          FragmentManager  fragmentManager = getSupportFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            fragmentManager.popBackStack();
+            transaction.commit();
+        }
+    }
+    //显示收藏
+    @Subscribe(threadMode = ThreadMode.POSTING)
+    public void show_love(MessageEvent event){
+        if (event.type==MessageEventType.SHOW_LOVE){
+            FragmentManager  fragmentManager = getSupportFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            fragmentManager.popBackStack();
+            transaction.commit();
+        }
+    }
+    //显示下载
+    @Subscribe(threadMode = ThreadMode.POSTING)
+    public void show_down(MessageEvent event){
+        if (event.type==MessageEventType.SHOW_DOWNMANAGER){
+            FragmentManager  fragmentManager = getSupportFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.add(R.id.fragment_layout_main,new Down_Fragment());
+            transaction.hide(mineFragment);  //隐藏当前的Fragment
+            transaction.addToBackStack(null);//添加回退栈
+            transaction.commit();
+        }
+    }
+   //显示最近播放
+
+   @Subscribe(threadMode = ThreadMode.POSTING)
+   public void show_recent(MessageEvent event){
+       if (event.type==MessageEventType.SHOW_RECENT){
+
+       }
+   }
+
     //显示本地音乐
     @Subscribe
     public void MessageSubscriberLocal(MessageEvent event){

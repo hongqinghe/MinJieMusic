@@ -12,7 +12,6 @@ import java.util.ArrayList;
  */
 @Table(name = "Mp3Info")
 public class Mp3Info extends ArrayList<String> {
-
     @Column(name = "id", isId = true)
     private long id;
     @Column(name = "mp3InfoId")

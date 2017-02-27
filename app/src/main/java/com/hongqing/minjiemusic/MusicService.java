@@ -297,7 +297,6 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     public void onDestroy() {
         //保存状态
         SharedPreferences.Editor edit = application.sharedPreferences.edit();
-        System.out.println(getCurrentPosition()+"======ccccc====c");
         edit.putInt("CURRENT_PROGRESS",getCurrentPosition());
         edit.putInt("MODE",MODE_PLAY);
         edit.putInt("INDEX",index);

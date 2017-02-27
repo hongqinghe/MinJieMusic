@@ -10,6 +10,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 
 public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final String TAG = "list";
     public MusicService musicService;
     private boolean serviceBound = false;//定义一个标记 判断服务是否已绑定
     public BaseApplication application;
@@ -123,6 +125,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
            stopService(new Intent(this,MusicService.class));//退出service
            //将每个Activity关闭
+           Log.i(TAG, "exit: "+list.size());
            for (int i=0;i<list.size();i++){
                list.get(i).finish();
            }

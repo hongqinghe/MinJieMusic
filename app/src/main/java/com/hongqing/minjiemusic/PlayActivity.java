@@ -17,8 +17,11 @@ import com.hongqing.minjiemusic.adapter.PlayViewPagerAdapter;
 
 import com.hongqing.minjiemusic.fragment.LyricsFragment;
 import com.hongqing.minjiemusic.fragment.PlayAlbumFragment;
+import com.hongqing.minjiemusic.utils.AppUtils;
 import com.hongqing.minjiemusic.utils.Constant;
+import com.hongqing.minjiemusic.utils.DownloadUtils;
 import com.hongqing.minjiemusic.utils.MediaUtils;
+import com.hongqing.minjiemusic.utils.MlyException;
 import com.hongqing.minjiemusic.view.view.LrcView;
 import com.hongqing.minjiemusic.vo.MessageEvent;
 import com.hongqing.minjiemusic.vo.MessageEventType;
@@ -56,6 +59,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
     private ImageView iv_love;
     private Mp3Info mp3Info;
     private BaseApplication application;
+    private ImageView iv_down;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,7 +155,6 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
        public MyHandler(PlayActivity  playActivity){
            weakReference=new WeakReference<PlayActivity>(playActivity);
        }
-
        @Override
        public void handleMessage(Message msg) {
            PlayActivity playActivity=weakReference.get();
@@ -168,16 +171,13 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     protected void onResume() {
-        System.out.println("playActivity==============onResume");
         super.onResume();
         bindMusicService();
     }
 
-
     @Override
     protected void onPause() {
         unBindService();
-        System.out.println("playActivity==============onPause");
         super.onPause();
     }
 
@@ -194,6 +194,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
         seekBar = (SeekBar) findViewById(R.id.seekBar);
         mode_play = (ImageView) findViewById(R.id.mode_play);
         iv_love = (ImageView) findViewById(R.id.iv_love);
+        iv_down = (ImageView) findViewById(R.id.iv_down);
         initSeekBar();
         current_progress = (TextView) findViewById(R.id.play_current_progress);
         duration = (TextView) findViewById(R.id.duration_play);
@@ -217,6 +218,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
 
     private void initListener() {
         iv_love.setOnClickListener(this);
+        iv_down.setOnClickListener(this);
         back_title_icon.setOnClickListener(this);
         prev_play.setOnClickListener(this);
         play.setOnClickListener(this);
@@ -245,14 +247,37 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
 
                 break;
             case R.id.mode_play:
+                //模式
                 update_play_moder();
                 break;
             case  R.id.iv_love:
                  setLoveMusic();
                 break;
+            case R.id.iv_down:
+                downMusic();
+                break;
         }
     }
-   //点击喜欢按钮  先判断是不是喜欢 如果喜欢状态，就取消  ，否则直接保存
+
+    private void downMusic() {
+        //下载歌曲
+        DownloadUtils.getInstance().
+                downloadMusic(this,mp3Info.getUrl(),mp3Info.getTitle())
+                .setListener(new DownloadUtils.OnDownloadListener() {
+                    @Override
+                    public void onDownload(String result, MlyException e) {
+                        if (e==null){
+                            toast(getString(R.string.down_success));
+                            AppUtils.scanFileAsync(PlayActivity.this,result);
+                        }
+                        else {
+                            toast(e.toString());
+                        }
+                    }
+                });
+    }
+
+    //点击喜欢按钮  先判断是不是喜欢 如果喜欢状态，就取消  ，否则直接保存
     private void setLoveMusic() {
         Mp3Info mp3Info = musicService.getMp3InfoList().get(musicService.getIndex());
         System.out.println(mp3Info.toString()+"this  is ");
@@ -275,9 +300,6 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener, 
         } catch (DbException e) {
             e.printStackTrace();
         }
-//        EventBus.getDefault().postSticky(new MessageEvent(
-//                MessageEventType.QUERY_MY_LIKE_MUSIC_COUNT));
-
         setLoveRes(mp3Info);
     }
 

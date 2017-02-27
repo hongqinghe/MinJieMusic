@@ -37,4 +37,5 @@
     <string name="current_progress">当前进度</string>
     <string name="duration_play">时长</string>
     <string name="load_lrc">正在加载歌词中</string>
+    <string name="down_success">下载成功</string>
 </resources>

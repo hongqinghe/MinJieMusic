@@ -12,8 +12,12 @@ public enum MessageEventType {
     SHOW_GTB_FRAGMENT,   //显示港台榜
     SHOW_LXB_FRAGMENT,     //显示流行榜
     SHOW_PLAY_ACTIVITY,     //跳转到播放页
-    SERVICE_PLAY ,          //服务播放
-    EXIT_APP;
+    SERVICE_PLAY,          //服务播放
+    EXIT_APP,               //退出app
+    SHOW_DOWNMANAGER,        //下载管理
+    SHOW_RECENT,               //最近播放
+    SHOW_SONG_List,          //显示歌单
+    SHOW_LOVE,     //收藏
 }
 
 
