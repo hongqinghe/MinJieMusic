@@ -82,7 +82,6 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         local_or_net= application.sharedPreferences.getInt("LOCAL_OR_NET",Constant.LOCAL_LIST);
         index= application.sharedPreferences.getInt("INDEX",0);
         currentPosition= application.sharedPreferences.getInt("CURRENT_PROGRESS",0);
-        System.out.println(currentPosition+"bbbbbbbbbbbbbbbbbb");
         // 如果为空则设置默认播放模式为order_play
         setMODE_PLAY(application.sharedPreferences.getInt("MODE",ORDER_PLAY));
         mp3InfoList= MediaUtils.getMp3Infos(this);
@@ -324,8 +323,8 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     }
 
     interface MusicUpdateListener{
-        void updateProgess(long progress);
-        void changeData(long   currentPosition);
+        void updateProgess(long progress);//这个方法用来更新进度条
+        void changeData(long   currentPosition);//UI界面的更新（如歌手等）
     }
 
 

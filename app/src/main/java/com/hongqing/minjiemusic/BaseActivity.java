@@ -47,10 +47,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         //初始化加载数据库
 //        application = (BaseApplication) getApplication();
     }
-
     public void bindMusicService() {
         if (!serviceBound) {
-            System.out.println("在 activity中绑定服务  -----============");
             bindService(new Intent(this, MusicService.class), connection, BIND_AUTO_CREATE);
             serviceBound=true;
         }
